@@ -3,22 +3,22 @@
  */
 package com.nowucca.shurely.core.impl;
 
+import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
 import com.nowucca.shurely.core.URIManager;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Base32URIManager implements URIManager {
 
-    Base32StringGenerator generator = new Base32StringGenerator();
+    IntegerDrivenStringGenerator generator = new Base32StringGenerator();
 
     public static final String DOMAIN="shure.ly";
 
-    private ConcurrentHashMap<Integer,Record> database;
+    private ConcurrentMapURIStore store;
 
     public Base32URIManager() {
-        database = new ConcurrentHashMap<Integer, Record>();
+        store = new ConcurrentMapURIStore(generator);
     }
 
     public URI shrink(URI longURI) {
@@ -26,11 +26,9 @@ public class Base32URIManager implements URIManager {
             throw new NullPointerException("longURI");
         }
         URI shrunk =  makeShortening(longURI);
-        Integer id = decodeURI(shrunk);
-        Record record = new Record(id, longURI, shrunk);
-        Record existing = database.putIfAbsent(id, record);
+        URI existing = store.putIfAbsent(longURI, shrunk);
         if ( existing != null ) {
-            shrunk = existing.getShortURI();
+            shrunk = existing;
         }
         return shrunk;
     }
@@ -39,39 +37,8 @@ public class Base32URIManager implements URIManager {
         if ( shortURI == null ) {
             throw new NullPointerException("shortURI");
         }
-
-        final int id = decodeURI(shortURI);
-        return database.get(id).getLongURI();
+        return store.get(shortURI);
     }
-
-    private static class Record {
-           int id;
-           URI longURI;
-           URI shortURI;
-
-           private Record(int id, URI longURI, URI shortURI) {
-               this.id = id;
-               this.longURI = longURI;
-               this.shortURI = shortURI;
-           }
-
-           public int getId() {
-               return id;
-           }
-
-           public URI getLongURI() {
-               return longURI;
-           }
-
-           public URI getShortURI() {
-               return shortURI;
-           }
-       }
-
-    private int decodeURI(URI shrunk) {
-        return generator.decode(shrunk.getPath().substring(1));
-    }
-
 
     private URI makeShortening(URI sourceURI) {
         try {

@@ -10,7 +10,6 @@ import java.net.URI;
  */
 public interface URIManager {
 
-
     /**
      * Obtain the shortened version of a URI by "shrinking" it.
      * @param longURI the URI to be shortened

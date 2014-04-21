@@ -6,6 +6,7 @@ package com.nowucca.shurely.core;
 import java.net.URI;
 
 public interface URIStore {
+
     URI putIfAbsent(URI longURI, URI shortURI);
 
     URI get(URI shortURI);

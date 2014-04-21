@@ -6,4 +6,5 @@ package com.nowucca.shurely.core;
 public interface UniqueStringGenerator {
 
     String get();
+
 }

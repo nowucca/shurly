@@ -3,11 +3,11 @@
  */
 package com.nowucca.shurely.core.impl;
 
-import com.nowucca.shurely.core.UniqueStringGenerator;
+import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Base32StringGenerator implements UniqueStringGenerator {
+public class Base32StringGenerator implements IntegerDrivenStringGenerator {
 
 
     private static final String ALPHABET = "abcdefhijkmnpqrtuvwxyz0123456789";
@@ -19,7 +19,7 @@ public class Base32StringGenerator implements UniqueStringGenerator {
         return encode(idGenerator.incrementAndGet());
     }
 
-    String encode(int num) {
+    public String encode(int num) {
         StringBuilder sb = new StringBuilder();
 
         while (num > 0) {
