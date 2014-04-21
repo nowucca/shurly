@@ -3,7 +3,7 @@
  */
 package com.nowucca.shurely.core;
 
-interface UniqueStringGenerator {
+public interface UniqueStringGenerator {
 
     String get();
 }

@@ -1,8 +1,10 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurely.core;
+package com.nowucca.shurely.core.impl;
 
+import com.nowucca.shurely.core.URIStore;
+import com.nowucca.shurely.core.impl.BidiURIMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +13,7 @@ import java.net.URI;
 
 public class BidiURIMapTest {
 
-    private BidiURIMap map;
+    private URIStore map;
 
     @Before
     public void before() throws Exception {

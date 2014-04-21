@@ -1,8 +1,9 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurely.core;
+package com.nowucca.shurely.core.impl;
 
+import com.nowucca.shurely.core.impl.Base32StringGenerator;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;

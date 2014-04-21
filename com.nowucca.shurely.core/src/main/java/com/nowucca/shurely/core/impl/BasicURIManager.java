@@ -1,7 +1,11 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurely.core;
+package com.nowucca.shurely.core.impl;
+
+import com.nowucca.shurely.core.URIManager;
+import com.nowucca.shurely.core.URIStore;
+import com.nowucca.shurely.core.UniqueStringGenerator;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,7 +14,7 @@ public class BasicURIManager implements URIManager {
     
     UniqueStringGenerator generator = new SequentialAlphabetStringGenerator();
 
-    BidiURIMap map = new BidiURIMap();
+    URIStore store = new BidiURIMap();
 
     public static final String DOMAIN="shure.ly";
 
@@ -24,7 +28,7 @@ public class BasicURIManager implements URIManager {
 
         URI shrunk =  makeShortening(longURI);
 
-        URI existing = map.putIfAbsent(longURI, shrunk);
+        URI existing = store.putIfAbsent(longURI, shrunk);
         if ( existing != null ) {
             shrunk = existing;
         }
@@ -36,7 +40,7 @@ public class BasicURIManager implements URIManager {
             throw new NullPointerException("shortURI");
         }
 
-        return map.get(shortURI);
+        return store.get(shortURI);
     }
 
     private URI makeShortening(URI sourceURI) {

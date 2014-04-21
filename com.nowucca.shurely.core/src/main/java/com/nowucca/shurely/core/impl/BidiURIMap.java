@@ -1,12 +1,14 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurely.core;
+package com.nowucca.shurely.core.impl;
+
+import com.nowucca.shurely.core.URIStore;
 
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
-class BidiURIMap {
+class BidiURIMap implements URIStore {
         ConcurrentHashMap<URI, URI> long2short = new ConcurrentHashMap<URI, URI>();
         ConcurrentHashMap<URI, URI> short2long = new ConcurrentHashMap<URI, URI>();
 

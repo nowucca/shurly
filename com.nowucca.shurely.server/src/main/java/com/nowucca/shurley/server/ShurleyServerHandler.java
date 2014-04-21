@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-import com.nowucca.shurely.core.BasicURIManager;
+import com.nowucca.shurely.core.impl.BasicURIManager;
 import com.nowucca.shurely.core.URIManager;
 import org.jboss.netty.channel.ChannelEvent;
 import org.jboss.netty.channel.ChannelHandlerContext;
