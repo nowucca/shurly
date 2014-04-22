@@ -3,6 +3,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+#maven target folders
+target/
+
 # Package Files #
 *.jar
 *.war

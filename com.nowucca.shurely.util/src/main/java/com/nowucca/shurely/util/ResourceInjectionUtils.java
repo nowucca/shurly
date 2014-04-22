@@ -46,7 +46,7 @@ public class ResourceInjectionUtils {
                     if (resourceType == Object.class) {
                         resourceType = parameterTypes[0];
                     }
-                    if (resourceType == injectableType  || resourceType.isAssignableFrom(injectableType)) {
+                    if (resourceType == injectableType) {
                         try {
                             method.invoke(target, injectableInstance);
                             //TODO: logging integration
