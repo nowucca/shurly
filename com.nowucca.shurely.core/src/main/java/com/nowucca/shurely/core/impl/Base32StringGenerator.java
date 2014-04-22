@@ -14,6 +14,11 @@ public class Base32StringGenerator implements IntegerDrivenStringGenerator {
     private static final int BASE = ALPHABET.length();
     private static final AtomicInteger idGenerator = new AtomicInteger();
 
+    private static final String NAME = Base32StringGenerator.class.getCanonicalName();
+
+    public String getName() {
+        return NAME;
+    }
 
     public String get() {
         return encode(idGenerator.incrementAndGet());

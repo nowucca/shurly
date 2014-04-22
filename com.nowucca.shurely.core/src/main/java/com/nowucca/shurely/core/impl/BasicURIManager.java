@@ -7,18 +7,32 @@ import com.nowucca.shurely.core.URIManager;
 import com.nowucca.shurely.core.URIStore;
 import com.nowucca.shurely.core.UniqueStringGenerator;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class BasicURIManager implements URIManager {
-    
-    UniqueStringGenerator generator = new SequentialAlphabetStringGenerator();
 
-    URIStore store = new BidiURIMap();
+    private static final String DOMAIN="shure.ly";
 
-    public static final String DOMAIN="shure.ly";
+    static final String NAME = BasicURIManager.class.getCanonicalName();
 
-    public BasicURIManager() {
+    private SequentialAlphabetStringGenerator generator;
+
+    private BidiURIMap store;
+
+    @Resource
+    public void setGenerator(SequentialAlphabetStringGenerator generator) {
+        this.generator = generator;
+    }
+
+    @Resource
+    public void setStore(BidiURIMap store) {
+        this.store = store;
+    }
+
+    public String getName() {
+        return NAME;
     }
 
     public URI shrink(URI longURI) {
@@ -51,5 +65,16 @@ public class BasicURIManager implements URIManager {
         }
     }
 
+    //---------------------------
+    // test methods
+    //---------------------------
 
+
+    SequentialAlphabetStringGenerator getGenerator() {
+        return generator;
+    }
+
+    BidiURIMap getStore() {
+        return store;
+    }
 }

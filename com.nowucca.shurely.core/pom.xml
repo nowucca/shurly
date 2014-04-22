@@ -15,11 +15,18 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>com.nowucca.shurley</groupId>
+      <artifactId>com.nowucca.shurley.util</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.7</version>
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

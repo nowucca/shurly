@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.nowucca.shurley</groupId>
-  <artifactId>com.nowucca.shurley.server</artifactId>
+  <artifactId>com.nowucca.shurley.util</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>com.nowucca.shurley.server</name>
+  <name>com.nowucca.shurley.util</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -15,25 +15,11 @@
   </properties>
 
   <dependencies>
-
-    <dependency>
-      <groupId>com.nowucca.shurley</groupId>
-      <artifactId>com.nowucca.shurley.core</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty</artifactId>
-      <version>3.5.10.Final</version>
-      <scope>compile</scope>
-    </dependency>
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.7</version>
-      <scope>test</scope>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 </project>

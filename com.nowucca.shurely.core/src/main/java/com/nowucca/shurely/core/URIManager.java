@@ -8,7 +8,7 @@ import java.net.URI;
 /**
  * Basic Management operations on URI objects.
  */
-public interface URIManager {
+public interface URIManager extends NamedObject {
 
     /**
      * Obtain the shortened version of a URI by "shrinking" it.
@@ -27,5 +27,10 @@ public interface URIManager {
     public URI follow(URI shortURI);
 
 
+    /**
+     * A unique name identifying this kind of URI manager.
+     * @return a unique name identifying this kind of uri manager.
+     */
+    String getName();
 
 }

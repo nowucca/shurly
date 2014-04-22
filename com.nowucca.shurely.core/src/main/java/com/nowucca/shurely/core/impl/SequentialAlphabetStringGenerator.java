@@ -9,7 +9,15 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class SequentialAlphabetStringGenerator implements Iterator<String>, UniqueStringGenerator {
+public class SequentialAlphabetStringGenerator implements Iterator<String>, UniqueStringGenerator {
+
+
+    private static final String NAME = SequentialAlphabetStringGenerator.class.getCanonicalName();
+
+    public String getName() {
+        return NAME;
+    }
+
 
     private int currentLength = 0;
 

@@ -8,7 +8,15 @@ import com.nowucca.shurely.core.URIStore;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
-class BidiURIMap implements URIStore {
+public class BidiURIMap implements URIStore {
+
+
+    private static final String NAME = BidiURIMap.class.getCanonicalName();
+
+    public String getName() {
+        return NAME;
+    }
+
         ConcurrentHashMap<URI, URI> long2short = new ConcurrentHashMap<URI, URI>();
         ConcurrentHashMap<URI, URI> short2long = new ConcurrentHashMap<URI, URI>();
 

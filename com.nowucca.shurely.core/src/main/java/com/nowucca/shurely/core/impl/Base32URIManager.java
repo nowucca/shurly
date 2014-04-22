@@ -6,19 +6,33 @@ package com.nowucca.shurely.core.impl;
 import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
 import com.nowucca.shurely.core.URIManager;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Base32URIManager implements URIManager {
 
-    IntegerDrivenStringGenerator generator = new Base32StringGenerator();
-
     public static final String DOMAIN="shure.ly";
 
+    static final String NAME = Base32URIManager.class.getCanonicalName();
+
+
+    private Base32StringGenerator generator;
     private ConcurrentMapURIStore store;
 
-    public Base32URIManager() {
-        store = new ConcurrentMapURIStore(generator);
+    @Resource
+    public void setGenerator(Base32StringGenerator generator) {
+        this.generator = generator;
+    }
+
+    @Resource
+    public void setStore(ConcurrentMapURIStore store) {
+        this.store = store;
+    }
+
+
+    public String getName() {
+        return NAME;
     }
 
     public URI shrink(URI longURI) {
@@ -48,5 +62,16 @@ public class Base32URIManager implements URIManager {
         }
     }
 
+    //---------------------------------------------------
+    // test methods
+    //---------------------------------------------------
+
+    Base32StringGenerator getGenerator() {
+        return generator;
+    }
+
+    ConcurrentMapURIStore getStore() {
+        return store;
+    }
 
 }

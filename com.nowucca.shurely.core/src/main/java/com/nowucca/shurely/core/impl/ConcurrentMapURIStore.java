@@ -5,18 +5,31 @@ package com.nowucca.shurely.core.impl;
 
 import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
 import com.nowucca.shurely.core.URIStore;
+import com.nowucca.shurely.core.UniqueStringGenerator;
+import com.sun.jdi.NativeMethodException;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConcurrentMapURIStore implements URIStore {
 
+    public static final String NAME = ConcurrentMapURIStore.class.getCanonicalName();
+
     private ConcurrentHashMap<Integer, Record> database;
     private IntegerDrivenStringGenerator generator;
 
-    public ConcurrentMapURIStore(IntegerDrivenStringGenerator generator) {
-        this.database = new ConcurrentHashMap<Integer, Record>();
+    @Resource
+    public void setGenerator(IntegerDrivenStringGenerator generator) {
         this.generator = generator;
+    }
+
+    public String getName() {
+        return NAME;
+    }
+
+    public ConcurrentMapURIStore() {
+        this.database = new ConcurrentHashMap<Integer, Record>();
     }
 
     public URI putIfAbsent(URI longURI, URI shortURI) {
@@ -60,5 +73,15 @@ public class ConcurrentMapURIStore implements URIStore {
         public URI getShortURI() {
             return shortURI;
         }
+    }
+
+
+    //-----------------------------------
+    // test methods
+    //-----------------------------------
+
+
+    IntegerDrivenStringGenerator getGenerator() {
+        return generator;
     }
 }

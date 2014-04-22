@@ -5,7 +5,7 @@ package com.nowucca.shurely.core;
 
 import java.net.URI;
 
-public interface URIStore {
+public interface URIStore extends NamedObject {
 
     URI putIfAbsent(URI longURI, URI shortURI);
 
