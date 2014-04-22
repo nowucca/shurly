@@ -15,3 +15,13 @@ hs_err_pid*
 *.iml
 *.ipr
 *.iws
+
+build.sh
+
+clean.sh
+
+com.nowucca.shurely.core/mvnci.txt
+
+com.nowucca.shurely.server/mvnci.txt
+
+com.nowucca.shurely.util/mvnci.txt
