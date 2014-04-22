@@ -3,8 +3,8 @@
  */
 package com.nowucca.shurely.core.context;
 
-import org.hamcrest.core.IsNot;
-import org.hamcrest.core.IsNull;
+import com.nowucca.shurely.core.context.URIManagerContext;
+import com.nowucca.shurely.core.context.URIManagerContextResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,9 +18,7 @@ public class URIManagerContextResolverTest {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
         URIManagerContext context = resolver.resolve();
 
-        // We do not load them using just this module's classpath.
-        Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.basic.BasicURIManager"), nullValue());
-        Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.base32.Base32URIManager"), nullValue());
+        Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.basic.BasicURIManager"), not(nullValue()));
 
     }
 }
