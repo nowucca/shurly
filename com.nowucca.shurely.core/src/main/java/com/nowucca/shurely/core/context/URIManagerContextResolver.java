@@ -4,9 +4,9 @@
 package com.nowucca.shurely.core.context;
 
 import com.nowucca.shurely.core.NamedObject;
+import com.nowucca.shurely.core.StringGenerator;
 import com.nowucca.shurely.core.URIManager;
 import com.nowucca.shurely.core.URIStore;
-import com.nowucca.shurely.core.UniqueStringGenerator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,9 +21,9 @@ public class URIManagerContextResolver {
 
     public URIManagerContext resolve() {
 
-        ConcurrentMap<String, UniqueStringGenerator> generators =
+        ConcurrentMap<String, StringGenerator> generators =
                        loadImpls(currentThread().getContextClassLoader(),
-                               UniqueStringGenerator.class);
+                               StringGenerator.class);
 
         ConcurrentMap<String, URIStore> stores =
                 loadImpls(currentThread().getContextClassLoader(), URIStore.class);
@@ -33,7 +33,7 @@ public class URIManagerContextResolver {
 
         Map<Class<?>, Object> injectables = new HashMap<Class<?>, Object>();
 
-        for(UniqueStringGenerator generator: generators.values()) {
+        for(StringGenerator generator: generators.values()) {
             injectables.put(generator.getClass(), generator);
         }
 
@@ -45,7 +45,7 @@ public class URIManagerContextResolver {
             injectables.put(uriManager.getClass(), uriManager);
         }
 
-        for(UniqueStringGenerator generator: generators.values()) {
+        for(StringGenerator generator: generators.values()) {
             injectAll(generator, injectables);
         }
 

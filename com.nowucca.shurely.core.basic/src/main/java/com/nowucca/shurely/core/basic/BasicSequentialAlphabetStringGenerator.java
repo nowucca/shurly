@@ -3,21 +3,13 @@
  */
 package com.nowucca.shurely.core.basic;
 
-import com.nowucca.shurely.core.UniqueStringGenerator;
+import com.nowucca.shurely.core.StringGenerator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class BasicSequentialAlphabetStringGenerator implements Iterator<String>, UniqueStringGenerator {
-
-
-    private static final String NAME = BasicSequentialAlphabetStringGenerator.class.getCanonicalName();
-
-    public String getName() {
-        return NAME;
-    }
-
+public class BasicSequentialAlphabetStringGenerator implements Iterator<String>, StringGenerator {
 
     private int currentLength = 0;
 
@@ -40,7 +32,7 @@ public class BasicSequentialAlphabetStringGenerator implements Iterator<String>,
         positions.add(0);
     }
 
-    public String get() {
+    public String getString() {
         return next();
     }
 
@@ -98,5 +90,9 @@ public class BasicSequentialAlphabetStringGenerator implements Iterator<String>,
 
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+
+    public String getName() {
+        return this.getClass().getCanonicalName();
     }
 }

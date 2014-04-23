@@ -3,18 +3,16 @@
  */
 package com.nowucca.shurely.core.base32;
 
+import com.nowucca.shurely.core.StringGenerator;
 import com.nowucca.shurely.core.URIManager;
+import com.nowucca.shurely.core.URIStore;
+import com.nowucca.shurely.core.AbstractURIManager;
 
 import javax.annotation.Resource;
-import java.net.URI;
-import java.net.URISyntaxException;
 
-public class Base32URIManager implements URIManager {
-
-    public static final String DOMAIN="shure.ly";
+public class Base32URIManager extends AbstractURIManager implements URIManager {
 
     static final String NAME = Base32URIManager.class.getCanonicalName();
-
 
     private Base32StringGenerator generator;
     private Base32InMemoryURIStore store;
@@ -29,36 +27,14 @@ public class Base32URIManager implements URIManager {
         this.store = store;
     }
 
-
-    public String getName() {
-        return NAME;
+    @Override
+    protected URIStore getURIStore() {
+        return store;
     }
 
-    public URI shrink(URI longURI) {
-        if ( longURI == null ) {
-            throw new NullPointerException("longURI");
-        }
-        URI shrunk =  makeShortening(longURI);
-        URI existing = store.putIfAbsent(longURI, shrunk);
-        if ( existing != null ) {
-            shrunk = existing;
-        }
-        return shrunk;
-    }
-
-    public URI follow(URI shortURI) {
-        if ( shortURI == null ) {
-            throw new NullPointerException("shortURI");
-        }
-        return store.get(shortURI);
-    }
-
-    private URI makeShortening(URI sourceURI) {
-        try {
-            return new URI(sourceURI.getScheme(), DOMAIN, "/"+generator.get(), null);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Failed to shorten URI: "+sourceURI, e);
-        }
+    @Override
+    protected StringGenerator getStringGenerator() {
+        return generator;
     }
 
     //---------------------------------------------------

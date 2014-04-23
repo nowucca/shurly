@@ -27,20 +27,20 @@ public class BasicSequentialAlphabetStringGeneratorTest {
 
     @Test
     public void shouldYieldCorrectFirstElement() throws Exception {
-        Assert.assertEquals(String.valueOf((char)alphabet[0]), generator.get());
+        Assert.assertEquals(String.valueOf((char)alphabet[0]), generator.getString());
     }
 
     @Test
     public void shouldYieldCorrectSecondElement() throws Exception {
-        Assert.assertEquals(String.valueOf((char)alphabet[0]), (generator.get()));
-        Assert.assertEquals(String.valueOf((char)alphabet[1]), (generator.get()));
+        Assert.assertEquals(String.valueOf((char)alphabet[0]), (generator.getString()));
+        Assert.assertEquals(String.valueOf((char)alphabet[1]), (generator.getString()));
     }
 
     @Test
     public void shouldYieldCorrectFinalAlphabetElement() throws Exception {
         String result = null;
         for(int i = 0; i< ALPHABET_LENGTH; i++) {
-            result = generator.get();
+            result = generator.getString();
         }
         Assert.assertEquals(String.valueOf((char)alphabet[ALPHABET_LENGTH-1]), (result));
 
@@ -50,7 +50,7 @@ public class BasicSequentialAlphabetStringGeneratorTest {
     public void shouldExpandLengthOfStringFromOneToTwoAsExpected() throws Exception {
         String result = null;
         for(int i = 0; i<ALPHABET_LENGTH+1; i++) {
-            result = generator.get();
+            result = generator.getString();
         }
         Assert.assertEquals(new String(new byte[]{alphabet[0],alphabet[0]}),(result));
 
@@ -60,7 +60,7 @@ public class BasicSequentialAlphabetStringGeneratorTest {
     public void shouldIncrementMostSignificantDigitAsExpectedForLength2Strings() throws Exception {
         String result = null;
         for(int i = 0; i<2* ALPHABET_LENGTH +1; i++) {
-            result = generator.get();
+            result = generator.getString();
         }
         Assert.assertEquals(new String(new byte[]{alphabet[1],alphabet[0]}),(result));
 
@@ -70,7 +70,7 @@ public class BasicSequentialAlphabetStringGeneratorTest {
     public void shouldBeAsExpectedForRandomValueOfLength2() throws Exception {
         String result = null;
         for(int i = 0; i<2* ALPHABET_LENGTH +1+5; i++) {
-            result = generator.get();
+            result = generator.getString();
         }
         Assert.assertEquals(new String(new byte[]{alphabet[1],alphabet[5]}),(result));
 
@@ -97,7 +97,7 @@ public class BasicSequentialAlphabetStringGeneratorTest {
             int count = getCallCountForStringLength(length);
 
             for(int i = 0; i<count; i++) {
-                result = generator.get();
+                result = generator.getString();
             }
 
 
@@ -117,7 +117,7 @@ public class BasicSequentialAlphabetStringGeneratorTest {
     @Test 
     public void demonstrateFirst1000() throws Exception {
         for(int i = 0; i<1000; i++) {
-            System.out.println(i+": '"+ generator.get()+"'");
+            System.out.println(i+": '"+ generator.getString()+"'");
         }
 
     }

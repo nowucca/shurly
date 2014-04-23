@@ -10,35 +10,29 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class BasicInMemoryURIStore implements URIStore {
 
-
-    private static final String NAME = BasicInMemoryURIStore.class.getCanonicalName();
+    ConcurrentHashMap<URI, URI> long2short = new ConcurrentHashMap<URI, URI>();
+    ConcurrentHashMap<URI, URI> short2long = new ConcurrentHashMap<URI, URI>();
 
     public String getName() {
-        return NAME;
+        return this.getClass().getCanonicalName();
     }
 
-        ConcurrentHashMap<URI, URI> long2short = new ConcurrentHashMap<URI, URI>();
-        ConcurrentHashMap<URI, URI> short2long = new ConcurrentHashMap<URI, URI>();
-
-        public synchronized URI putIfAbsent(URI longURI, URI shortURI) {
-            URI existing = long2short.putIfAbsent(longURI, shortURI);
-            if ( existing != null ) {
-                return existing;
-            } else {
-                existing = short2long.putIfAbsent(shortURI, longURI);
-                if ( existing != null ) {
-                    throw new IllegalStateException(
-                            String.format("Attempt to establish shortened URI '%s' for '%s' when it shortens '%s' already.",
-                                    shortURI, longURI, existing));
-                }
+    public synchronized URI putIfAbsent(URI longURI, URI shortURI) {
+        URI existing = long2short.putIfAbsent(longURI, shortURI);
+        if (existing != null) {
+            return existing;
+        } else {
+            existing = short2long.putIfAbsent(shortURI, longURI);
+            if (existing != null) {
+                throw new IllegalStateException(
+                        String.format("Attempt to establish shortened URI '%s' for '%s' when it shortens '%s' already.",
+                                shortURI, longURI, existing));
             }
-            return null;
         }
-
-        public synchronized URI get(URI shortURI) {
-            return short2long.get(shortURI);
-        }
-
-
-
+        return null;
     }
+
+    public synchronized URI get(URI shortURI) {
+        return short2long.get(shortURI);
+    }
+}

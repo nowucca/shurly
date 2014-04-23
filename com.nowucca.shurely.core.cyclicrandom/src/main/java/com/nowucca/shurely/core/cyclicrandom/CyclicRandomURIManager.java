@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurely.core.basic;
+package com.nowucca.shurely.core.cyclicrandom;
 
 import com.nowucca.shurely.core.StringGenerator;
 import com.nowucca.shurely.core.URIManager;
@@ -10,23 +10,20 @@ import com.nowucca.shurely.core.AbstractURIManager;
 
 import javax.annotation.Resource;
 
-public class BasicURIManager extends AbstractURIManager implements URIManager {
+public class CyclicRandomURIManager extends AbstractURIManager implements URIManager {
 
-    private static final String DOMAIN="shure.ly";
+    public static final String DOMAIN="shure.ly";
 
-    static final String NAME = BasicURIManager.class.getCanonicalName();
-
-    private BasicSequentialAlphabetStringGenerator generator;
-
-    private BasicInMemoryURIStore store;
+    private CyclicRandomStringGenerator generator;
+    private CycleRandomInMemoryURIStore store;
 
     @Resource
-    public void setGenerator(BasicSequentialAlphabetStringGenerator generator) {
+    public void setGenerator(CyclicRandomStringGenerator generator) {
         this.generator = generator;
     }
 
     @Resource
-    public void setStore(BasicInMemoryURIStore store) {
+    public void setStore(CycleRandomInMemoryURIStore store) {
         this.store = store;
     }
 
@@ -40,16 +37,16 @@ public class BasicURIManager extends AbstractURIManager implements URIManager {
         return generator;
     }
 
-    //---------------------------
+    //---------------------------------------------------
     // test methods
-    //---------------------------
+    //---------------------------------------------------
 
-
-    BasicSequentialAlphabetStringGenerator getGenerator() {
+    CyclicRandomStringGenerator getGenerator() {
         return generator;
     }
 
-    BasicInMemoryURIStore getStore() {
+    CycleRandomInMemoryURIStore getStore() {
         return store;
     }
+
 }

@@ -3,7 +3,6 @@
  */
 package com.nowucca.shurely.core.base32;
 
-import com.nowucca.shurely.core.base32.Base32StringGenerator;
 import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +18,8 @@ public class Base32StringGeneratorTest {
 
     @Test
     public void shouldStartAtId1WhenCallingGetInitially() throws Exception {
-        Assert.assertEquals("b", generator.get());
-        Assert.assertEquals("c", generator.get());
+        Assert.assertEquals("b", generator.getString());
+        Assert.assertEquals("c", generator.getString());
     }
 
     @Test

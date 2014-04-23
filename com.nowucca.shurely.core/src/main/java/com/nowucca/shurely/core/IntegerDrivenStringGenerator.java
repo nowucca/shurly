@@ -3,7 +3,7 @@
  */
 package com.nowucca.shurely.core;
 
-public interface IntegerDrivenStringGenerator extends UniqueStringGenerator {
+public interface IntegerDrivenStringGenerator extends StringGenerator {
 
     String encode(int num);
 

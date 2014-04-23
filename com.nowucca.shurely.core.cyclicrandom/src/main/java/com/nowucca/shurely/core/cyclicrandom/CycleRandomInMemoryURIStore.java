@@ -1,19 +1,20 @@
 /**
  * Copyright (c) 2007-2012, Kaazing Corporation. All rights reserved.
  */
-package com.nowucca.shurely.core.base32;
+package com.nowucca.shurely.core.cyclicrandom;
 
+import com.nowucca.shurely.core.URIStore;
 import com.nowucca.shurely.core.AbstractInMemoryURIStore;
 import com.nowucca.shurely.core.AbstractIntegerDrivenStringGenerator;
 
 import javax.annotation.Resource;
 
-public class Base32InMemoryURIStore extends AbstractInMemoryURIStore {
+public class CycleRandomInMemoryURIStore extends AbstractInMemoryURIStore implements URIStore {
 
-    private Base32StringGenerator generator;
+    private CyclicRandomStringGenerator generator;
 
     @Resource
-    public void setGenerator(Base32StringGenerator generator) {
+    public void setGenerator(CyclicRandomStringGenerator generator) {
         this.generator = generator;
     }
 
@@ -27,7 +28,7 @@ public class Base32InMemoryURIStore extends AbstractInMemoryURIStore {
     //-----------------------------------
 
 
-    Base32StringGenerator getGenerator() {
+    CyclicRandomStringGenerator getGenerator() {
         return generator;
     }
 }

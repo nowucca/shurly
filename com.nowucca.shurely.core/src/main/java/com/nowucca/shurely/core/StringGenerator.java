@@ -3,8 +3,8 @@
  */
 package com.nowucca.shurely.core;
 
-public interface UniqueStringGenerator extends NamedObject {
+public interface StringGenerator extends NamedObject {
 
-    String get();
+    String getString();
 
 }
