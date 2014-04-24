@@ -25,7 +25,7 @@ public class BasicURIManagerTest {
 
     @Test
     public void testResourceInjections() throws Exception {
-        com.nowucca.shurely.core.basic.BasicURIManager manager = (com.nowucca.shurely.core.basic.BasicURIManager) context.getURIManager(com.nowucca.shurely.core.basic.BasicURIManager.NAME);
+        com.nowucca.shurely.core.basic.BasicURIManager manager = (com.nowucca.shurely.core.basic.BasicURIManager) context.getURIManager("com.nowucca.shurely.core.basic.BasicURIManager");
 
         Assert.assertThat(manager.getGenerator(), not(nullValue()));
         Assert.assertThat(manager.getGenerator(), instanceOf(BasicSequentialAlphabetStringGenerator.class));

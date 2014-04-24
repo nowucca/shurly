@@ -3,24 +3,29 @@
  */
 package com.nowucca.shurely.core.basic;
 
+import com.nowucca.shurely.core.AbstractLoadableEntity;
 import com.nowucca.shurely.core.StringGenerator;
+import com.nowucca.shurely.util.UTF8;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 
-public class BasicSequentialAlphabetStringGenerator implements Iterator<String>, StringGenerator {
+public class BasicSequentialAlphabetStringGenerator extends AbstractLoadableEntity implements Iterator<String>, StringGenerator {
 
     private int currentLength = 0;
 
-    byte[] alphabet = new byte[] {
-              'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x', 'y','z'};
+    static final byte[] DEFAULT_ALPHABET = new byte[] {
+              'a','b','c','d','e','f'};
+
+    final byte[] alphabet;
 
     private List<Integer> positions = new ArrayList<Integer>();
     /*
-    /a /b /c ... /z
-    /aa /ab ... /az
-    /ba /bb ... /bz
+    /a /b /c ... /f
+    /aa /ab ... /af
+    /ba /bb ... /bf
     ...
     /za /zb ... /zz
 
@@ -28,8 +33,10 @@ public class BasicSequentialAlphabetStringGenerator implements Iterator<String>,
      */
 
     public BasicSequentialAlphabetStringGenerator() {
+        super();
         currentLength++;
         positions.add(0);
+        alphabet = config.getByteArray("alphabet", DEFAULT_ALPHABET);
     }
 
     public String getString() {

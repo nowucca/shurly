@@ -6,13 +6,14 @@ package com.nowucca.shurely.core;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class AbstractInMemoryURIStore implements URIStore {
+public abstract class AbstractInMemoryURIStore extends AbstractLoadableEntity implements URIStore {
 
     private ConcurrentHashMap<Integer, Record> database;
 
     protected AbstractInMemoryURIStore() {
-        this.database = new ConcurrentHashMap<Integer, Record>();
+        this.database = new ConcurrentHashMap<Integer, Record>(config.getInteger("mapCapacity", 16));
     }
+
     protected abstract AbstractIntegerDrivenStringGenerator getStringGenerator();
 
     public String getName() {

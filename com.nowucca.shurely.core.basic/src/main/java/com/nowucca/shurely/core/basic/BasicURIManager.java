@@ -12,10 +12,6 @@ import javax.annotation.Resource;
 
 public class BasicURIManager extends AbstractURIManager implements URIManager {
 
-    private static final String DOMAIN="shure.ly";
-
-    static final String NAME = BasicURIManager.class.getCanonicalName();
-
     private BasicSequentialAlphabetStringGenerator generator;
 
     private BasicInMemoryURIStore store;

@@ -3,15 +3,22 @@
  */
 package com.nowucca.shurely.core.basic;
 
+import com.nowucca.shurely.core.AbstractLoadableEntity;
 import com.nowucca.shurely.core.URIStore;
 
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class BasicInMemoryURIStore implements URIStore {
+public class BasicInMemoryURIStore extends AbstractLoadableEntity implements URIStore {
 
-    ConcurrentHashMap<URI, URI> long2short = new ConcurrentHashMap<URI, URI>();
-    ConcurrentHashMap<URI, URI> short2long = new ConcurrentHashMap<URI, URI>();
+    ConcurrentHashMap<URI, URI> long2short;
+    ConcurrentHashMap<URI, URI> short2long;
+
+    public BasicInMemoryURIStore() {
+        super();
+        long2short = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity",16));
+        short2long = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity",16));
+    }
 
     public String getName() {
         return this.getClass().getCanonicalName();

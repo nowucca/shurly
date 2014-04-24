@@ -12,8 +12,6 @@ import javax.annotation.Resource;
 
 public class CyclicRandomURIManager extends AbstractURIManager implements URIManager {
 
-    public static final String DOMAIN="shure.ly";
-
     private CyclicRandomStringGenerator generator;
     private CycleRandomInMemoryURIStore store;
 

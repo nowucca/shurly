@@ -3,16 +3,15 @@
  */
 package com.nowucca.shurely.core;
 
-import com.nowucca.shurely.core.StringGenerator;
-import com.nowucca.shurely.core.URIManager;
-import com.nowucca.shurely.core.URIStore;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public abstract class AbstractURIManager implements URIManager {
+public abstract class AbstractURIManager extends AbstractLoadableEntity implements URIManager {
 
-    public static final String DOMAIN="shure.ly";
+    public static final String DEFAULT_DOMAIN="shure.ly";
+
+    protected AbstractURIManager() {
+    }
 
     protected abstract URIStore getURIStore();
 
@@ -43,9 +42,16 @@ public abstract class AbstractURIManager implements URIManager {
 
     protected URI makeShortening(URI sourceURI) {
         try {
-            return new URI(sourceURI.getScheme(), DOMAIN, "/"+getStringGenerator().getString(), null);
+            return new URI(sourceURI.getScheme(),
+                    getShorteningDomain(),
+                    "/"+getStringGenerator().getString(),
+                    null);
         } catch (URISyntaxException e) {
             throw new RuntimeException("Failed to shorten URI: "+sourceURI, e);
         }
+    }
+
+    private String getShorteningDomain() {
+        return config.getString("domain", DEFAULT_DOMAIN);
     }
 }

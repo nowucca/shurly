@@ -3,9 +3,7 @@
  */
 package com.nowucca.shurely.core;
 
-import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
-
-public abstract class AbstractIntegerDrivenStringGenerator implements IntegerDrivenStringGenerator {
+public abstract class AbstractIntegerDrivenStringGenerator extends AbstractLoadableEntity implements IntegerDrivenStringGenerator {
 
     public String getName() {
         return this.getClass().getCanonicalName();

@@ -6,16 +6,26 @@ package com.nowucca.shurely.core.cyclicrandom;
 import com.nowucca.shurely.core.IntegerDrivenStringGenerator;
 import com.nowucca.shurely.core.AbstractIntegerDrivenStringGenerator;
 
-public class CyclicRandomStringGenerator extends AbstractIntegerDrivenStringGenerator implements IntegerDrivenStringGenerator {
+public class CyclicRandomStringGenerator
+        extends AbstractIntegerDrivenStringGenerator
+        implements IntegerDrivenStringGenerator {
 
-    private static final String ALPHABET = "abcdefhijkmnpqrtuvwxyz0123456789ABCDEFHUJKMNPQRTUVWXYZ"; //54
-    private static final int BASE = ALPHABET.length();
+    private static final String DEFAULT_ALPHABET =
+            "abcdefhijkmnpqrtuvwxyz0123456789";
 
-    private CyclicRandom idGenerator;
+    private static final long DEFAULT_SEED = 4212521L;
+    private static final int DEFAULT_PERIOD = 1000;
+
+    private final String alphabet;
+    private final CyclicRandom idGenerator;
 
 
     public CyclicRandomStringGenerator() {
-        idGenerator = new CyclicRandom(4212521L, 1000); //TODO should be configured
+        alphabet = config.getString("alphabet", DEFAULT_ALPHABET);
+
+        long seed = config.getLong("seed", DEFAULT_SEED);
+        int period = config.getInteger("period", DEFAULT_PERIOD);
+        idGenerator = new CyclicRandom(seed, period);
     }
 
     public String getString() {
@@ -24,6 +34,6 @@ public class CyclicRandomStringGenerator extends AbstractIntegerDrivenStringGene
 
     @Override
     public String getAlphabet() {
-        return ALPHABET;
+        return alphabet;
     }
 }
