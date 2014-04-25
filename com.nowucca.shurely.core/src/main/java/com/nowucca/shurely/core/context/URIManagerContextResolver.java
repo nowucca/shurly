@@ -7,17 +7,14 @@ import com.nowucca.shurely.core.NamedObject;
 import com.nowucca.shurely.core.StringGenerator;
 import com.nowucca.shurely.core.URIManager;
 import com.nowucca.shurely.core.URIStore;
-import com.nowucca.shurely.util.ClassPathResourceUtils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static com.nowucca.shurely.util.ClassPathResourceUtils.loadClassProperties;
-import static com.nowucca.shurely.util.ResourceInjectionUtils.injectAll;
+import static com.nowucca.shurely.util.ResourceInjectionUtil.injectAll;
 import static java.lang.Thread.currentThread;
 
 public class URIManagerContextResolver {

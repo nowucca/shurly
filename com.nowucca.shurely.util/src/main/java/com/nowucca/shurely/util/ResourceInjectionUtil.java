@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class ResourceInjectionUtils {
+public class ResourceInjectionUtil {
 
     public static <T> void inject(Object target,
                                   Class<T> injectableType,

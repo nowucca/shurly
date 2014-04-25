@@ -5,9 +5,12 @@ package com.nowucca.shurley.server;
 
 import com.nowucca.shurely.core.URIManager;
 import com.nowucca.shurely.core.basic.BasicURIManager;
+import com.nowucca.shurely.core.context.URIManagerContext;
+import com.nowucca.shurely.core.context.URIManagerContextResolver;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
+import javax.annotation.Resource;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +25,15 @@ public class ShurleyServerHandler extends SimpleChannelInboundHandler<ShurleyMes
     private static final Logger logger = Logger.getLogger(
             ShurleyServerHandler.class.getName());
 
-    private URIManager manager = new BasicURIManager();
+    private URIManagerContext context;
+    private URIManager manager;
 
+    @Resource
+    public ShurleyServerHandler setContext(URIManagerContext context) {
+        this.context = context;
+        this.manager = context.getURIManager(BasicURIManager.class.getCanonicalName());
+        return this;
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

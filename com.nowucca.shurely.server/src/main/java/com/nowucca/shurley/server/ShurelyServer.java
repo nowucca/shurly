@@ -3,6 +3,9 @@
  */
 package com.nowucca.shurley.server;
 
+import com.nowucca.shurely.core.context.URIManagerContext;
+import com.nowucca.shurely.core.context.URIManagerContextResolver;
+import com.nowucca.shurely.util.ResourceInjectionUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -24,6 +27,9 @@ public class ShurelyServer {
     public void run() throws Exception {
         long start = System.currentTimeMillis();
 
+        URIManagerContext uriManagerContext =
+                new URIManagerContextResolver().resolve();
+
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -31,7 +37,7 @@ public class ShurelyServer {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
-                .childHandler(new ShurleyServerChannelInitializer())
+                .childHandler(new ShurleyServerChannelInitializer(uriManagerContext))
                 .option(ChannelOption.SO_BACKLOG, 128)
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
@@ -39,6 +45,9 @@ public class ShurelyServer {
             ChannelFuture f = bootstrap.bind(port).sync();
 
             System.out.println(String.format("Started in %3.3f seconds.", (System.currentTimeMillis()-start)/1000f));
+
+            f.channel().closeFuture().sync();
+
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();

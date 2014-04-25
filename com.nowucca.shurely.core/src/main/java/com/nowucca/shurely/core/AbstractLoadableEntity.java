@@ -7,8 +7,8 @@ import com.nowucca.shurely.util.Config;
 
 import java.util.Properties;
 
-import static com.nowucca.shurely.util.ClassPathResourceUtils.loadClassProperties;
-import static com.nowucca.shurely.util.ClassPathResourceUtils.loadPackageProperties;
+import static com.nowucca.shurely.util.ClassPathResourceUtil.loadClassProperties;
+import static com.nowucca.shurely.util.ClassPathResourceUtil.loadPackageProperties;
 
 public class AbstractLoadableEntity {
 

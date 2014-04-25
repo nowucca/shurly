@@ -14,7 +14,7 @@ import java.util.Properties;
 /**
  * Help for loading things from the classpath.
  */
-public class ClassPathResourceUtils {
+public class ClassPathResourceUtil {
 
     /**
      * Class properties come from the file <code>META-INF/config/full/package/name/{SimpleClassName}.properties</code>
