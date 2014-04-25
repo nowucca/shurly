@@ -3,13 +3,13 @@
  */
 package com.nowucca.shurley.server;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.handler.codec.replay.ReplayingDecoder;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ReplayingDecoder;
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.List;
 
 public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecoder.DecodeState> {
 
@@ -34,12 +34,12 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
     }
 
     @Override
-    protected Object decode(ChannelHandlerContext ctx,
-                            Channel channel, ChannelBuffer buf, DecodeState state) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
+
 
         Object result = null;
 
-        switch (state) {
+        switch (state()) {
             case READ_MAGIC:
                 magic = buf.readInt();
                 if (magic == MAGIC_BYTES_AS_INT) {
@@ -95,10 +95,10 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
                 }
         }
 
+        //noinspection ConstantConditions
         assert result != null;
-        setState(DecodeState.READ_MAGIC);
-        return result;
-
+        state(DecodeState.READ_MAGIC);
+        out.add(result);
     }
 
 }

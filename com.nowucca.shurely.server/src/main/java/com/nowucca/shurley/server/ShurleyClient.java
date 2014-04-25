@@ -1,34 +1,24 @@
-/*
- * Copyright 2012 The Netty Project
- *
- * The Netty Project licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
+/**
+ * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
 package com.nowucca.shurley.server;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
-import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.Channel;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import static java.lang.String.format;
 
 /**
  * Simplistic telnet-style Shurley client.
@@ -38,7 +28,7 @@ public class ShurleyClient {
     private static final short VERSION = (short) 1;
     private final String host;
     private final int port;
-    
+
     private Map<URI, URI> long2short = new HashMap<URI, URI>();
     private static int msgId = 0;
 
@@ -47,90 +37,86 @@ public class ShurleyClient {
         this.port = port;
     }
 
-    public void run() throws IOException {
+    public void run() throws Exception {
         // Configure the client.
-        ClientBootstrap bootstrap = new ClientBootstrap(
-                new NioClientSocketChannelFactory(
-                        Executors.newCachedThreadPool(),
-                        Executors.newCachedThreadPool()));
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-        // Configure the pipeline factory.
-        bootstrap.setPipelineFactory(new ShurelyClientPipelineFactory(long2short));
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(workerGroup)
+                    .channel(NioSocketChannel.class)
+                    .option(ChannelOption.SO_KEEPALIVE, true)
+                    .handler(new ShurelyClientChannelInitializer(long2short));
 
-        // Start the connection attempt.
-        ChannelFuture future = bootstrap.connect(new InetSocketAddress(host, port));
+            // Start the connection attempt.
+            ChannelFuture future = bootstrap.connect(host, port).sync();
 
-        // Wait until the connection attempt succeeds or fails.
-        Channel channel = future.awaitUninterruptibly().getChannel();
-        if (!future.isSuccess()) {
-            future.getCause().printStackTrace();
-            bootstrap.releaseExternalResources();
-            return;
-        }
+            printWelcomeInstructions();
 
-        printWelcomeInstructions();
+            // Read commands from the stdin.
+            ChannelFuture lastWriteFuture = null;
+            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            for (; ; ) {
+                if (lastWriteFuture != null) {
+                    lastWriteFuture.syncUninterruptibly();
+                }
+                printPrompt();
 
-        // Read commands from the stdin.
-        ChannelFuture lastWriteFuture = null;
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-        for (;;) {
+                String line = in.readLine();
+                if (line == null) {
+                    continue;
+                }
+
+                lastWriteFuture = processLine(line, future.channel());
+
+                // If user typed the 'bye' command,  close
+                // the connection and cleanup.
+                if (line.toLowerCase().equals("bye")) {
+                    future.channel().close().awaitUninterruptibly();
+                    workerGroup.shutdownGracefully();
+                    break;
+                }
+            }
+
+            // Wait until all messages are flushed before closing the channel.
             if (lastWriteFuture != null) {
                 lastWriteFuture.awaitUninterruptibly();
             }
-            printPrompt();
-            
-            String line = in.readLine();
-            if (line == null) {
-                break;
-            }
 
-            lastWriteFuture = processLine(line, channel);
+            // Close the connection.  Make sure the close operation ends because
+            // all I/O operations are asynchronous in Netty.
+            future.channel().close().sync();
 
-            // If user typed the 'bye' command,  close
-            // the connection and cleanup.
-            if (line.toLowerCase().equals("bye")) {
-                channel.close().awaitUninterruptibly();
-                bootstrap.releaseExternalResources();
-                return;
-            }
+        } finally {
+            workerGroup.shutdownGracefully();
         }
-
-        // Wait until all messages are flushed before closing the channel.
-        if (lastWriteFuture != null) {
-            lastWriteFuture.awaitUninterruptibly();
-        }
-
-        // Close the connection.  Make sure the close operation ends because
-        // all I/O operations are asynchronous in Netty.
-        channel.close().awaitUninterruptibly();
-
-        // Shut down all thread pools to exit.
-        bootstrap.releaseExternalResources();
     }
 
+
+
     private ChannelFuture processLine(String line, Channel channel) {
-        if ( line.startsWith("shrink ") ) {
+        if (line.startsWith("shrink ")) {
             URI longURI = readUriFromLine(line, "shrink ");
             if (longURI == null) return null;
             ShurleyShrinkMessage msg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
-            return channel.write(msg);
+            return channel.writeAndFlush(msg);
         } else if (line.startsWith("follow ")) {
             URI longURI = readUriFromLine(line, "follow ");
             if (longURI == null) return null;
             ShurleyFollowMessage msg = new ShurleyFollowMessage(VERSION, msgId++, longURI);
-            return channel.write(msg);
+            return channel.writeAndFlush(msg);
         } else if (line.startsWith("list")) {
             System.out.println();
             System.out.println();
-            for(Map.Entry<URI,URI> shortening: long2short.entrySet()) {
-                System.out.println(shortening.getKey() + " -> "+ shortening.getValue());
+            for (Map.Entry<URI, URI> shortening : long2short.entrySet()) {
+                System.out.println(shortening.getKey() + " -> " + shortening.getValue());
             }
             System.out.println();
             return null;
-        } else if ( line.equals("bye")){
-            return null; // close handled in main loop            
+        } else if (line.equals("bye")) {
+            return null; // close handled in main loop
         } else {
-            System.out.println(String.format("Unrecognized command '%s'.", line));
+            System.out.println(format("Unrecognized command '%s'.", line));
             printWelcomeInstructions();
             return null;
         }
@@ -142,7 +128,7 @@ public class ShurleyClient {
         try {
             longURI = new URI(enteredURI);
         } catch (URISyntaxException e) {
-            System.out.println(String.format("Malformed URL: '%s'.", enteredURI));
+            System.out.println(format("Malformed URL: '%s'.", enteredURI));
             return null;
         }
         return longURI;
