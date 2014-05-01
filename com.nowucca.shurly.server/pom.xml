@@ -2,19 +2,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.nowucca.shurley</groupId>
-  <artifactId>com.nowucca.shurley.server</artifactId>
+  <groupId>com.nowucca.shurly</groupId>
+  <artifactId>com.nowucca.shurly.server</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>com.nowucca.shurley.server</name>
+  <name>com.nowucca.shurly.server</name>
   <url>http://maven.apache.org</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <port>8080</port>
     <host>localhost</host>
-    <uriManager>com.nowucca.shurely.core.basic.BasicURIManager</uriManager>
+    <uriManager>com.nowucca.shurly.core.basic.BasicURIManager</uriManager>
   </properties>
 
   <profiles>
@@ -35,7 +35,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.nowucca.shurley.server.ShurelyServer</mainClass>
+              <mainClass>com.nowucca.shurly.server.ShurelyServer</mainClass>
               <arguments>
                 <argument>${port}</argument>
                 <argument>${uriManager}</argument>
@@ -62,7 +62,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.nowucca.shurley.server.ShurleyClient</mainClass>
+              <mainClass>com.nowucca.shurly.server.ShurleyClient</mainClass>
               <arguments>
                 <argument>${host}</argument>
                 <argument>${port}</argument>
@@ -77,21 +77,21 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.nowucca.shurley</groupId>
-      <artifactId>com.nowucca.shurley.core</artifactId>
+      <groupId>com.nowucca.shurly</groupId>
+      <artifactId>com.nowucca.shurly.core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>com.nowucca.shurley</groupId>
-      <artifactId>com.nowucca.shurley.core.basic</artifactId>
+      <groupId>com.nowucca.shurly</groupId>
+      <artifactId>com.nowucca.shurly.core.basic</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 
 
     <dependency>
-      <groupId>com.nowucca.shurley</groupId>
-      <artifactId>com.nowucca.shurley.core.base32</artifactId>
+      <groupId>com.nowucca.shurly</groupId>
+      <artifactId>com.nowucca.shurly.core.base32</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
 

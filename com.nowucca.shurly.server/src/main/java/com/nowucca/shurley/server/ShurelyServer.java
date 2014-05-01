@@ -3,10 +3,9 @@
  */
 package com.nowucca.shurley.server;
 
-import com.nowucca.shurely.core.URIManager;
-import com.nowucca.shurely.core.basic.BasicURIManager;
-import com.nowucca.shurely.core.context.URIManagerContext;
-import com.nowucca.shurely.core.context.URIManagerContextResolver;
+import com.nowucca.shurly.core.URIManager;
+import com.nowucca.shurly.core.context.URIManagerContext;
+import com.nowucca.shurly.core.context.URIManagerContextResolver;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -21,15 +20,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-import javax.annotation.Resource;
 import java.net.URI;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.nowucca.shurely.util.ResourceInjectionUtil.inject;
 import static java.lang.String.format;
 
 /**
