@@ -3,8 +3,6 @@
  */
 package com.nowucca.shurely.core.context;
 
-import com.nowucca.shurely.core.context.URIManagerContext;
-import com.nowucca.shurely.core.context.URIManagerContextResolver;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,9 +14,8 @@ public class URIManagerContextResolverTest {
     @Test
     public void testSimpleResolve() throws Exception {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
-        URIManagerContext context = resolver.resolve();
+        URIManagerContext context = resolver.resolve("com.nowucca.shurely.core.base32.Base32URIManager");
 
         Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.base32.Base32URIManager"), not(nullValue()));
-
     }
 }

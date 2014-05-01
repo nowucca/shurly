@@ -3,8 +3,6 @@
  */
 package com.nowucca.shurely.core.cyclicrandom;
 
-import com.nowucca.shurely.core.cyclicrandom.CycleRandomInMemoryURIStore;
-import com.nowucca.shurely.core.cyclicrandom.CyclicRandomURIManager;
 import com.nowucca.shurely.core.context.URIManagerContext;
 import com.nowucca.shurely.core.context.URIManagerContextResolver;
 import org.junit.Assert;
@@ -24,7 +22,7 @@ public class CyclicRandomURIManagerTest {
     @Before
     public void setUp() throws Exception {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
-        context = resolver.resolve();
+        context = resolver.resolve("com.nowucca.shurely.core.cyclicrandom.CyclicRandomURIManager");
     }
 
     @Test
@@ -43,7 +41,7 @@ public class CyclicRandomURIManagerTest {
         CyclicRandomURIManager manager = (CyclicRandomURIManager) context.getURIManager(CyclicRandomURIManager.class.getCanonicalName());
 
         final URI longURI = URI.create("http://www.google.com");
-        final URI expectedShortURI = URI.create("http://nowucca.com/cyclicrandom/dRUPyN");
+        final URI expectedShortURI = URI.create("http://nowucca.com/shurley/cyclicrandom/dRUPyN");
         URI shortURI = manager.shrink(longURI);
         Assert.assertEquals("failed to shrink to expected short uri", expectedShortURI, shortURI);
     }

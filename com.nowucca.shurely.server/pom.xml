@@ -12,7 +12,67 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <port>8080</port>
+    <host>localhost</host>
+    <uriManager>com.nowucca.shurely.core.basic.BasicURIManager</uriManager>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>server</id>
+      <activation><property><name>server</name></property></activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <mainClass>com.nowucca.shurley.server.ShurelyServer</mainClass>
+              <arguments>
+                <argument>${port}</argument>
+                <argument>${uriManager}</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>client</id>
+      <activation><property><name>client</name></property></activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <mainClass>com.nowucca.shurley.server.ShurleyClient</mainClass>
+              <arguments>
+                <argument>${host}</argument>
+                <argument>${port}</argument>
+              </arguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
   <dependencies>
 
@@ -49,4 +109,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+
 </project>

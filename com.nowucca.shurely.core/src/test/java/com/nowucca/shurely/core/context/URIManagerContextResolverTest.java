@@ -3,8 +3,6 @@
  */
 package com.nowucca.shurely.core.context;
 
-import org.hamcrest.core.IsNot;
-import org.hamcrest.core.IsNull;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,14 +11,10 @@ import static org.hamcrest.core.IsNull.nullValue;
 
 public class URIManagerContextResolverTest {
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testSimpleResolve() throws Exception {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
-        URIManagerContext context = resolver.resolve();
-
-        // We do not load them using just this module's classpath.
-        Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.basic.BasicURIManager"), nullValue());
-        Assert.assertThat(context.getURIManager("com.nowucca.shurely.core.base32.Base32URIManager"), nullValue());
-
+        URIManagerContext context = resolver.resolve("com.nowucca.shurely.core.basic.BasicURIManager");
+        // cannot resolve because no uri manager can be selected
     }
 }

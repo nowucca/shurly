@@ -15,11 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static com.nowucca.shurely.util.ResourceInjectionUtil.injectAll;
+import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
 
 public class URIManagerContextResolver {
 
-    public URIManagerContext resolve() {
+    public URIManagerContext resolve(String uriManagerName) throws IllegalArgumentException {
 
         ConcurrentMap<String, StringGenerator> generators =
                        loadImpls(currentThread().getContextClassLoader(),
@@ -31,10 +32,17 @@ public class URIManagerContextResolver {
         ConcurrentMap<String, URIManager> uriManagers =
                 loadImpls(currentThread().getContextClassLoader(), URIManager.class);
 
+        URIManager selectedURIManager = uriManagers.get(uriManagerName);
+        if (selectedURIManager == null) {
+            StringBuilder sb = new StringBuilder();
+            for(String name: uriManagers.keySet()) { sb.append(name); sb.append(','); }
+            if (sb.length()>0 && sb.charAt(sb.length()-1)==',') { sb.deleteCharAt(sb.length()-1); }
+            throw new IllegalArgumentException(format("Unrecognized uri manager %s.  (available uri managers = %s)", uriManagerName, sb.toString()));
+        }
+
         Map<Class<?>, Object> injectables = new HashMap<Class<?>, Object>();
 
         for(StringGenerator generator: generators.values()) {
-
             injectables.put(generator.getClass(), generator);
         }
 
@@ -58,7 +66,7 @@ public class URIManagerContextResolver {
             injectAll(uriManager, injectables);
         }
 
-        return new DefaultURIManagerContext(generators, stores, uriManagers);
+        return new DefaultURIManagerContext(generators, stores, uriManagers, selectedURIManager);
     }
 
 
@@ -69,7 +77,7 @@ public class URIManagerContextResolver {
             String tName = t.getName();
             T oldT = impls.put(tName, t);
             if (oldT != null) {
-                throw new RuntimeException(String.format("Duplicate %s name: %s", clazz, tName));
+                throw new RuntimeException(format("Duplicate %s name: %s", clazz, tName));
             }
         }
         return impls;

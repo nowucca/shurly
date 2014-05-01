@@ -3,9 +3,6 @@
  */
 package com.nowucca.shurely.core.base32;
 
-import com.nowucca.shurely.core.base32.Base32InMemoryURIStore;
-import com.nowucca.shurely.core.base32.Base32StringGenerator;
-import com.nowucca.shurely.core.base32.Base32URIManager;
 import com.nowucca.shurely.core.context.URIManagerContext;
 import com.nowucca.shurely.core.context.URIManagerContextResolver;
 import org.junit.Assert;
@@ -23,7 +20,7 @@ public class Base32URIManagerTest {
     @Before
     public void setUp() throws Exception {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
-        context = resolver.resolve();
+        context = resolver.resolve(Base32URIManager.NAME);
     }
 
     @Test

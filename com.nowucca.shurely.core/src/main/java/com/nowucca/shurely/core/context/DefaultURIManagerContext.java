@@ -7,6 +7,8 @@ import com.nowucca.shurely.core.StringGenerator;
 import com.nowucca.shurely.core.URIManager;
 import com.nowucca.shurely.core.URIStore;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 public class DefaultURIManagerContext implements URIManagerContext {
@@ -14,15 +16,26 @@ public class DefaultURIManagerContext implements URIManagerContext {
     private Map<String, StringGenerator> generators;
     private Map<String, URIStore> stores;
     private Map<String, URIManager> uriManagers;
+    private URIManager selectedURIManager;
 
-    public DefaultURIManagerContext(Map<String, StringGenerator> generators, Map<String, URIStore> stores, Map<String, URIManager> uriManagers) {
+    public DefaultURIManagerContext(Map<String, StringGenerator> generators, Map<String, URIStore> stores,
+                                    Map<String, URIManager> uriManagers, URIManager selectedURIManager) {
         this.generators = generators;
         this.stores = stores;
         this.uriManagers = uriManagers;
+        this.selectedURIManager = selectedURIManager;
+    }
+
+    public Collection<URIManager> getURIManagers() {
+        return Collections.unmodifiableCollection(uriManagers.values());
     }
 
     public URIManager getURIManager(String name) {
         return uriManagers.get(name);
+    }
+
+    public URIManager getSelectedURIManager() {
+        return selectedURIManager;
     }
 
     public URIStore getURIStore(String name) {

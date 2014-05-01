@@ -20,7 +20,7 @@ public class BasicURIManagerTest {
     @Before
     public void setUp() throws Exception {
         URIManagerContextResolver resolver = new URIManagerContextResolver();
-        context = resolver.resolve();
+        context = resolver.resolve("com.nowucca.shurely.core.basic.BasicURIManager");
     }
 
     @Test
