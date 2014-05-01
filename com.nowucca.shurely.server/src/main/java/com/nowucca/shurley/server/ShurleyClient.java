@@ -6,6 +6,7 @@ package com.nowucca.shurley.server;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -21,9 +22,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
@@ -33,10 +34,13 @@ import static java.lang.String.format;
 public class ShurleyClient {
 
     private static final short VERSION = (short) 1;
+
+    private AttributeKey<Map<URI,URI>> CLIENT_CACHE =
+            AttributeKey.valueOf("shurleyClientHandler.CLIENT_CACHE");
+
     private final String host;
     private final int port;
 
-    private Map<URI, URI> long2short = new HashMap<URI, URI>();
     private static int msgId = 0;
 
     public ShurleyClient(String host, int port) {
@@ -45,6 +49,9 @@ public class ShurleyClient {
     }
 
     public void run() throws Exception {
+
+        printWelcomeMessage();
+
         // Configure the client.
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -58,7 +65,7 @@ public class ShurleyClient {
             // Start the connection attempt.
             ChannelFuture future = bootstrap.connect(host, port).sync();
 
-            printWelcomeInstructions();
+            printCommandHelpMessage();
 
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
@@ -78,8 +85,8 @@ public class ShurleyClient {
 
                 // If user typed the 'bye' command,  close
                 // the connection and cleanup.
-                if (line.toLowerCase().equals("bye")) {
-                    future.channel().close().awaitUninterruptibly();
+                if (line.toLowerCase().equals("bye")  || line.toLowerCase().equals("quit")) {
+                    future.channel().close();
                     workerGroup.shutdownGracefully();
                     break;
                 }
@@ -106,27 +113,51 @@ public class ShurleyClient {
         if (line.startsWith("shrink ")) {
             URI longURI = readUriFromLine(line, "shrink ");
             if (longURI == null) return null;
-            ShurleyShrinkMessage msg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
-            return channel.writeAndFlush(msg);
+            final ShurleyShrinkMessage shrinkMsg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
+            return channel.writeAndFlush(shrinkMsg)
+                    .addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        System.out.format("Sent %s.v%d (%d) %s\n",
+                                shrinkMsg.getKind().name(),
+                                shrinkMsg.getVersion(),
+                                shrinkMsg.getMsgId(),
+                                shrinkMsg.getLongURI());
+                    }
+                }
+            });
         } else if (line.startsWith("follow ")) {
             URI longURI = readUriFromLine(line, "follow ");
             if (longURI == null) return null;
-            ShurleyFollowMessage msg = new ShurleyFollowMessage(VERSION, msgId++, longURI);
-            return channel.writeAndFlush(msg);
+            final ShurleyFollowMessage followMsg = new ShurleyFollowMessage(VERSION, msgId++, longURI);
+            return channel.writeAndFlush(followMsg)
+            .addListener(new ChannelFutureListener() {
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        System.out.format("Sent %s.v%d (%d) %s\n",
+                                followMsg.getKind().name(),
+                                followMsg.getVersion(),
+                                followMsg.getMsgId(),
+                                followMsg.getShortURI());
+                    }
+                }
+            });
         } else if (line.startsWith("list")) {
             System.out.println();
             System.out.println();
-            for (Map.Entry<URI, URI> shortening : long2short.entrySet()) {
+            final Map<URI, URI> map = channel.attr(CLIENT_CACHE).get();
+            for (Map.Entry<URI, URI> shortening : map.entrySet()) {
                 System.out.println(shortening.getKey() + " -> " + shortening.getValue());
             }
             System.out.println();
             printPrompt();
             return null;
-        } else if (line.equals("bye")) {
+        } else if (line.equals("bye") || line.equals("quit")) {
+            System.out.println(format("Bye.\n"));
             return null; // close handled in main loop
         } else {
-            System.out.println(format("Unrecognized command '%s'.", line));
-            printWelcomeInstructions();
+            System.out.println(format("Unrecognized command '%s'.\n", line));
+            printCommandHelpMessage();
             return null;
         }
     }
@@ -147,12 +178,16 @@ public class ShurleyClient {
         System.out.print("shurley> ");
     }
 
-    private void printWelcomeInstructions() {
+    private void printWelcomeMessage() {
+        System.out.format("Shurley Client (c) 2014 Steven Atkinson.  All Rights Reserved.\n\n");
+    }
+    private void printCommandHelpMessage() {
         System.out.println("Available commands: ");
         System.out.println("  shrink <uri>      -- shrinks the uri provided");
         System.out.println("  follow <uri>      -- follows the uri provided");
         System.out.println("  list              -- list the shortenings so far");
         System.out.println("  bye               -- quit");
+        System.out.println("  quit              -- quit");
         System.out.println();
         printPrompt();
     }
@@ -179,7 +214,6 @@ public class ShurleyClient {
      */
     private final SimpleChannelInboundHandler<ShurleyMessage> shurleyClientHandler = new SimpleChannelInboundHandler<ShurleyMessage>() {
 
-        private AttributeKey<Map<URI,URI>> CLIENT_CACHE = AttributeKey.valueOf("shurleyClientHandler.CLIENT_CACHE");
 
         @Override
         public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -190,12 +224,12 @@ public class ShurleyClient {
         @Override
         protected void channelRead0(ChannelHandlerContext ctx, ShurleyMessage msg) throws Exception {
             // Print out the line received from the server.
-            System.out.format("Received %s.v%d (#%d)\n", msg.getKind(), msg.getVersion(), msg.getMsgId());
             if ( msg instanceof ShurleyShrunkMessage ) {
                 ShurleyShrunkMessage m = (ShurleyShrunkMessage) msg;
                 URI longURI = m.getLongURI();
                 URI shortURI = m.getShortURI();
-                System.out.format("longURI=\"%s\" shortURI=\"%s\".\n", longURI, shortURI);
+                System.out.format("Received %s.v%d (%d) shortURI=\"%s\" longURI=\"%s\".\n",
+                        msg.getKind(), msg.getVersion(), msg.getMsgId(), shortURI, longURI);
                 ctx.channel().attr(CLIENT_CACHE).get().put(longURI, shortURI);
             }
             printPrompt();

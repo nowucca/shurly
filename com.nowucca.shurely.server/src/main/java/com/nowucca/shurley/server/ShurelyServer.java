@@ -115,14 +115,12 @@ public class ShurelyServer {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
-            super.channelActive(ctx);
-            logger.info(format("%s channel active", ctx.name()));
+            logger.info(format("client arrival (%s)", ctx.channel().remoteAddress().toString()));
         }
 
         @Override
         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-            super.channelInactive(ctx);
-            logger.info(format("%s channel inactive", ctx.name()));
+            logger.info(format("client departure (%s)", ctx.channel().remoteAddress().toString()));
         }
 
         @Override
@@ -137,22 +135,41 @@ public class ShurelyServer {
                     handleFollowRequest(ctx, msg);
                     break;
                 }
+                case SHRUNK:
+                case ERROR:
+                    logger.info(format("Ignoring an unexpectedly received %s message.", msg.getKind().toString()));
+                    break;
                 default:
-                    throw new Error("Should not get here.");
+                    throw new RuntimeException(String.format("Unrecognized message: %s", msg));
             }
 
         }
 
         private void handleFollowRequest(final ChannelHandlerContext ctx, final ShurleyMessage request) {
             try {
-                final URI shortURI = ((ShurleyFollowMessage) request).getShortURI();
+                final ShurleyFollowMessage followMsg = (ShurleyFollowMessage) request;
+
+                logger.info(format("Received %s.v%d (%d) %s",
+                        followMsg.getKind().name(),
+                        followMsg.getVersion(),
+                        followMsg.getMsgId(),
+                        followMsg.getShortURI()));
+
+                final URI shortURI = followMsg.getShortURI();
                 final URIManager selectedURIManager = uriManagerContext.getSelectedURIManager();
-                ShurleyShrunkMessage response = new ShurleyShrunkMessage(
+                final ShurleyShrunkMessage response = new ShurleyShrunkMessage(
                         request.getVersion(), request.getMsgId(), selectedURIManager.follow(shortURI), shortURI);
                 ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
                             handleErrorResponseCondition(ctx, request, future.cause());
+                        } else {
+                            logger.info(format("Sent %s.v%d (%d) shortURI=%s longURI=%s",
+                                    response.getKind().name(),
+                                    response.getVersion(),
+                                    response.getMsgId(),
+                                    response.getShortURI(),
+                                    response.getLongURI()));
                         }
                     }
                 });
@@ -163,14 +180,29 @@ public class ShurelyServer {
 
         private void handleShrinkRequest(final ChannelHandlerContext ctx, final ShurleyMessage request) {
             try {
-                final URI longURI = ((ShurleyShrinkMessage) request).getLongURI();
+                final ShurleyShrinkMessage shrinkMsg = (ShurleyShrinkMessage) request;
+
+                logger.info(format("Received %s.v%d (%d) %s",
+                        shrinkMsg.getKind().name(),
+                        shrinkMsg.getVersion(),
+                        shrinkMsg.getMsgId(),
+                        shrinkMsg.getLongURI()));
+
+                final URI longURI = shrinkMsg.getLongURI();
                 final URIManager selectedURIManager = uriManagerContext.getSelectedURIManager();
-                ShurleyShrunkMessage response = new ShurleyShrunkMessage(
+                final ShurleyShrunkMessage response = new ShurleyShrunkMessage(
                         request.getVersion(), request.getMsgId(), longURI, selectedURIManager.shrink(longURI));
                 ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (!future.isSuccess()) {
                             handleErrorResponseCondition(ctx, request, future.cause());
+                        } else {
+                            logger.info(format("Sent %s.v%d (%d) shortURI=%s longURI=%s",
+                                                                response.getKind().name(),
+                                                                response.getVersion(),
+                                                                response.getMsgId(),
+                                                                response.getShortURI(),
+                                                                response.getLongURI()));
                         }
                     }
                 });
@@ -180,13 +212,20 @@ public class ShurelyServer {
         }
 
         private void handleErrorResponseCondition(ChannelHandlerContext ctx, ShurleyMessage request, final Throwable ex) {
-            ShurleyErrorMessage errorMessage = new ShurleyErrorMessage(
+            final ShurleyErrorMessage response = new ShurleyErrorMessage(
                     request.getVersion(), request.getMsgId(), ShurleyErrorCode.UNKNOWN_ERROR);
-            ctx.channel().writeAndFlush(errorMessage).addListener(new ChannelFutureListener() {
+            ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if(!future.isSuccess()) {
                         logger.log(Level.SEVERE,
                                 "Failed to send an error message to client (original exception="+ex.getLocalizedMessage()+")", future.cause());
+                    } else {
+                        logger.info(format("Sent %s.v%d (%d) errorCode=%d reason=\"%s\"",
+                                                            response.getKind().name(),
+                                                            response.getVersion(),
+                                                            response.getMsgId(),
+                                                            response.getErrorCode(),
+                                                            response.getReason()));
                     }
                 }
             });
