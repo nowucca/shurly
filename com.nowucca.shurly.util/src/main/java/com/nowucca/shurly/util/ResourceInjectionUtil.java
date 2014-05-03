@@ -49,8 +49,6 @@ public class ResourceInjectionUtil {
                     if (resourceType == injectableType) {
                         try {
                             method.invoke(target, injectableInstance);
-                            //TODO: logging integration
-                            //System.out.format("Invoked %s.%s(%s)\n", targetClass, methodName, injectableType);
                         } catch (IllegalArgumentException e) {
                             throw e;
                         } catch (IllegalAccessException e) {

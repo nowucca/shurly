@@ -6,7 +6,8 @@ package com.nowucca.shurly.core;
 import java.net.URI;
 
 /**
- * Basic Management operations on URI objects.
+ * Basic Management operations on URI objects, including shortening and
+ * finding long URIs for given short ones.
  */
 public interface URIManager extends NamedObject {
 
