@@ -22,47 +22,48 @@ public class URIManagerContextResolver {
 
     public URIManagerContext resolve(String uriManagerName) throws IllegalArgumentException {
 
-        ConcurrentMap<String, StringGenerator> generators =
+        final ConcurrentMap<String, StringGenerator> generators =
                        loadImpls(currentThread().getContextClassLoader(),
                                StringGenerator.class);
 
-        ConcurrentMap<String, URIStore> stores =
+        final ConcurrentMap<String, URIStore> stores =
                 loadImpls(currentThread().getContextClassLoader(), URIStore.class);
 
-        ConcurrentMap<String, URIManager> uriManagers =
+        final ConcurrentMap<String, URIManager> uriManagers =
                 loadImpls(currentThread().getContextClassLoader(), URIManager.class);
 
-        URIManager selectedURIManager = uriManagers.get(uriManagerName);
+        final URIManager selectedURIManager = uriManagers.get(uriManagerName);
         if (selectedURIManager == null) {
-            StringBuilder sb = new StringBuilder();
-            for(String name: uriManagers.keySet()) { sb.append(name); sb.append(','); }
-            if (sb.length()>0 && sb.charAt(sb.length()-1)==',') { sb.deleteCharAt(sb.length()-1); }
-            throw new IllegalArgumentException(format("Unrecognized uri manager %s.  (available uri managers = %s)", uriManagerName, sb.toString()));
+            final StringBuilder sb = new StringBuilder();
+            for (String name: uriManagers.keySet()) { sb.append(name); sb.append(','); }
+            if (sb.length() > 0 && sb.charAt(sb.length() - 1) == ',') { sb.deleteCharAt(sb.length() - 1); }
+            final String errorMessageFormat = "Unrecognized uri manager %s.  (available uri managers = %s)";
+            throw new IllegalArgumentException(format(errorMessageFormat, uriManagerName, sb.toString()));
         }
 
-        Map<Class<?>, Object> injectables = new HashMap<Class<?>, Object>();
+        final Map<Class<?>, Object> injectables = new HashMap<Class<?>, Object>();
 
-        for(StringGenerator generator: generators.values()) {
+        for (StringGenerator generator: generators.values()) {
             injectables.put(generator.getClass(), generator);
         }
 
-        for(URIStore store: stores.values()) {
+        for (URIStore store: stores.values()) {
             injectables.put(store.getClass(), store);
         }
 
-        for(URIManager uriManager: uriManagers.values()) {
+        for (URIManager uriManager: uriManagers.values()) {
             injectables.put(uriManager.getClass(), uriManager);
         }
 
-        for(StringGenerator generator: generators.values()) {
+        for (StringGenerator generator: generators.values()) {
             injectAll(generator, injectables);
         }
 
-        for(URIStore store: stores.values()) {
+        for (URIStore store: stores.values()) {
             injectAll(store, injectables);
         }
 
-        for(URIManager uriManager: uriManagers.values()) {
+        for (URIManager uriManager: uriManagers.values()) {
             injectAll(uriManager, injectables);
         }
 
@@ -71,11 +72,11 @@ public class URIManagerContextResolver {
 
 
     private <T extends NamedObject> ConcurrentMap<String, T> loadImpls(ClassLoader classLoader, final Class<T> clazz) {
-        ServiceLoader<T> loader = load(classLoader, clazz);
-        ConcurrentMap<String, T> impls = new ConcurrentHashMap<String, T>();
-        for(T t: loader) {
-            String tName = t.getName();
-            T oldT = impls.put(tName, t);
+        final ServiceLoader<T> loader = load(classLoader, clazz);
+        final ConcurrentMap<String, T> impls = new ConcurrentHashMap<String, T>();
+        for (T t: loader) {
+            final String tName = t.getName();
+            final T oldT = impls.put(tName, t);
             if (oldT != null) {
                 throw new RuntimeException(format("Duplicate %s name: %s", clazz, tName));
             }

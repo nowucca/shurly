@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
+ * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
 package com.nowucca.shurly.core;
 
@@ -16,7 +16,7 @@ public interface URIManager extends NamedObject {
      * @param longURI the URI to be shortened
      * @return the shortened URI
      */
-    public URI shrink(URI longURI);
+    URI shrink(URI longURI);
 
     /**
      * Obtain the long version of a shortened URI by "following" the shortened
@@ -25,7 +25,7 @@ public interface URIManager extends NamedObject {
      * @param shortURI the shortened URI
      * @return the long form of the shortened URI or {@code null} if none was found
      */
-    public URI follow(URI shortURI);
+    URI follow(URI shortURI);
 
 
     /**

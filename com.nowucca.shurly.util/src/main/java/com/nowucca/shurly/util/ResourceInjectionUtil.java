@@ -10,6 +10,9 @@ import java.util.Map;
 
 public class ResourceInjectionUtil {
 
+    private ResourceInjectionUtil() {
+    }
+
     public static <T> void inject(Object target,
                                   Class<T> injectableType,
                                   T injectableInstance) {

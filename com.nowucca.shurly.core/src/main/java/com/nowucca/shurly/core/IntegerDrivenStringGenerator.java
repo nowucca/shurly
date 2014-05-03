@@ -9,7 +9,7 @@ package com.nowucca.shurly.core;
  * there exists an integer <em>i</em> such that <em>s = encode(i)</em> and <em>decode(s) = i</em>.
  *
  * Typically an {@link IntegerDrivenStringGenerator} is used to generate URI shortening schemes
- * with repeatable non-random shortenings.
+ * with repeatable non-random sequential shortenings.
  */
 public interface IntegerDrivenStringGenerator extends StringGenerator {
 

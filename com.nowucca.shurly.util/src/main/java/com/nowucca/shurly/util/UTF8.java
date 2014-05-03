@@ -7,7 +7,10 @@ import java.nio.charset.Charset;
 
 import static java.lang.String.format;
 
-public class UTF8 {
+public final class UTF8 {
+
+    private UTF8() {
+    }
 
     private static final String UTF_8 = "UTF-8";
 

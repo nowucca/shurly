@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
+ * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
 package com.nowucca.shurly.core.basic;
 
@@ -16,8 +16,8 @@ public class BasicInMemoryURIStore extends AbstractLoadableEntity implements URI
 
     public BasicInMemoryURIStore() {
         super();
-        long2short = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity",16));
-        short2long = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity",16));
+        long2short = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity", 16));
+        short2long = new ConcurrentHashMap<URI, URI>(config.getInteger("mapCapacity", 16));
     }
 
     public String getName() {
@@ -32,7 +32,7 @@ public class BasicInMemoryURIStore extends AbstractLoadableEntity implements URI
             existing = short2long.putIfAbsent(shortURI, longURI);
             if (existing != null) {
                 throw new IllegalStateException(
-                        String.format("Attempt to establish shortened URI '%s' for '%s' when it shortens '%s' already.",
+                       String.format("Attempt to establish shortened URI '%s' for '%s' when it shortens '%s' already.",
                                 shortURI, longURI, existing));
             }
         }

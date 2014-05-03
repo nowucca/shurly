@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
+ * Copyright (c) 2013-2014, Steven Atkinson. All rights reserved.
  */
 package com.nowucca.shurly.core;
 
@@ -21,9 +21,9 @@ public abstract class AbstractInMemoryURIStore extends AbstractLoadableEntity im
     }
 
     public URI putIfAbsent(URI longURI, URI shortURI) {
-        Integer id = decodeURI(shortURI);
-        Record record = new Record(id, longURI, shortURI);
-        Record existingRecord = database.putIfAbsent(id, record);
+        final Integer id = decodeURI(shortURI);
+        final Record record = new Record(id, longURI, shortURI);
+        final Record existingRecord = database.putIfAbsent(id, record);
         if (existingRecord != null) {
             return existingRecord.getShortURI();
         }
@@ -39,7 +39,7 @@ public abstract class AbstractInMemoryURIStore extends AbstractLoadableEntity im
         return getStringGenerator().decode(shrunk.getPath().substring(1));
     }
 
-    private final static class Record {
+    private static final class Record {
         int id;
         URI longURI;
         URI shortURI;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
+ * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
 package com.nowucca.shurley.server;
 
@@ -9,13 +9,11 @@ import com.nowucca.shurly.core.context.URIManagerContextResolver;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -45,18 +43,18 @@ public class ShurelyServer {
     }
 
     public void run() throws Exception {
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
         uriManagerContext =
                 new URIManagerContextResolver().resolve(uriManagerName);
 
         printWelcomeMessage(uriManagerContext);
 
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        final EventLoopGroup bossGroup = new NioEventLoopGroup();
+        final EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             // Configure the server.
-            ServerBootstrap bootstrap = new ServerBootstrap();
+            final ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workerGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(shurleyServerInitializer)
@@ -64,7 +62,7 @@ public class ShurelyServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
 
             // Bind and start to accept incoming connections.
-            ChannelFuture f = bootstrap.bind(port).sync();
+            final ChannelFuture f = bootstrap.bind(port).sync();
 
             System.out.format("Started in %3.3f seconds.\n", (System.currentTimeMillis() - start) / 1000f);
 
@@ -80,8 +78,8 @@ public class ShurelyServer {
     private void printWelcomeMessage(URIManagerContext uriManagerContext) {
         System.out.format("Shurley Server (c) 2014 Steven Atkinson.  All Rights Reserved.\n\n");
         System.out.format("Available URI Managers are: \n");
-        Collection<URIManager> uriManagers = uriManagerContext.getURIManagers();
-        for(URIManager uriManager: uriManagers) {
+        final Collection<URIManager> uriManagers = uriManagerContext.getURIManagers();
+        for (URIManager uriManager: uriManagers) {
             System.out.format("\t %s\n", uriManager.getName());
         }
         System.out.format("\nUsing URI Manager: %s\n\n", uriManagerContext.getSelectedURIManager().getName());
@@ -206,14 +204,17 @@ public class ShurelyServer {
             }
         }
 
-        private void handleErrorResponseCondition(ChannelHandlerContext ctx, ShurleyMessage request, final Throwable ex) {
+        private void handleErrorResponseCondition(ChannelHandlerContext ctx,
+                                                  ShurleyMessage request,
+                                                  final Throwable ex) {
             final ShurleyErrorMessage response = new ShurleyErrorMessage(
                     request.getVersion(), request.getMsgId(), ShurleyErrorCode.UNKNOWN_ERROR);
             ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    if(!future.isSuccess()) {
+                    if (!future.isSuccess()) {
                         logger.log(Level.SEVERE,
-                                "Failed to send an error message to client (original exception="+ex.getLocalizedMessage()+")", future.cause());
+                                "Failed to send an error message to client (original exception=" +
+                                        ex.getLocalizedMessage() + ")", future.cause());
                     } else {
                         logger.info(format("Sent %s.v%d (%d) errorCode=%d reason=\"%s\"",
                                                             response.getKind().name(),
@@ -248,7 +249,7 @@ public class ShurelyServer {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
             // Create a default pipeline implementation.
-            ChannelPipeline pipeline = ch.pipeline();
+            final ChannelPipeline pipeline = ch.pipeline();
             pipeline.addLast("commandDecoder", new ShurleyMessageDecoder());
             pipeline.addLast("commandEncoder", new ShurleyMessageEncoder());
             // and then business logic.

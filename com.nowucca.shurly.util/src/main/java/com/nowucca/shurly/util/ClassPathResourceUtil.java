@@ -14,9 +14,11 @@ import java.util.logging.Logger;
 /**
  * Help for loading things from the classpath.
  */
-public class ClassPathResourceUtil {
+public final class ClassPathResourceUtil {
 
     private static final Logger logger = Logger.getLogger("util");
+
+    private ClassPathResourceUtil() {}
 
     /**
      * Class properties come from the file <code>META-INF/config/full/package/name/{SimpleClassName}.properties</code>
@@ -46,22 +48,21 @@ public class ClassPathResourceUtil {
 
 
     private static Properties loadResourceAsProperties(String resourceLocation) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         BufferedReader in = null;
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         try {
-            URL resource = classLoader.getResource(resourceLocation);
+            final URL resource = classLoader.getResource(resourceLocation);
             in = new BufferedReader(new InputStreamReader(resource.openStream(), UTF8.charset()));
             properties.load(in);
         } catch (Exception e) {
-            logger.log(Level.INFO, String.format("Failed to load resource %s from classpath.", resourceLocation), e);
+            // logger.log(Level.INFO, String.format("Failed to load resource %s from classpath.", resourceLocation), e);
         } finally {
             if (in != null){
                 try {
                     in.close();
                 } catch (IOException e) {
-                    logger.log(Level.INFO, String.format("Failed to close resource stream when loading resource %s from classpath.", resourceLocation), e);
-
+                    // logger.log(Level.INFO, String.format("Failed to close resource stream when loading resource %s from classpath.", resourceLocation), e);
                 }
             }
         }

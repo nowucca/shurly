@@ -3,7 +3,8 @@
  */
 package com.nowucca.shurly.core;
 
-public abstract class AbstractIntegerDrivenStringGenerator extends AbstractLoadableEntity implements IntegerDrivenStringGenerator {
+public abstract class AbstractIntegerDrivenStringGenerator
+        extends AbstractLoadableEntity implements IntegerDrivenStringGenerator {
 
     public String getName() {
         return this.getClass().getCanonicalName();
@@ -17,7 +18,7 @@ public abstract class AbstractIntegerDrivenStringGenerator extends AbstractLoada
     protected abstract String getAlphabet();
 
     public String encode(int num) {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
 
         while (num > 0) {
             sb.append(getAlphabet().charAt(num % getAlphabet().length()));
@@ -30,7 +31,8 @@ public abstract class AbstractIntegerDrivenStringGenerator extends AbstractLoada
     public int decode(String str) {
         int num = 0;
 
-        for (int i = 0, len = str.length(); i < len; i++) {
+        final int len = str.length();
+        for (int i = 0; i < len; i++) {
             num = num * getAlphabet().length() + getAlphabet().indexOf(str.charAt(i));
         }
 

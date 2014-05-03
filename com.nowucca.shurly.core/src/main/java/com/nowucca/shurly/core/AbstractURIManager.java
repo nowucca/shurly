@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 
 public abstract class AbstractURIManager extends AbstractLoadableEntity implements URIManager {
 
-    public static final String DEFAULT_DOMAIN="shure.ly";
+    public static final String DEFAULT_DOMAIN = "shure.ly";
 
     protected AbstractURIManager() {
     }
@@ -22,19 +22,19 @@ public abstract class AbstractURIManager extends AbstractLoadableEntity implemen
     }
 
     public URI shrink(URI longURI) {
-        if ( longURI == null ) {
+        if (longURI == null) {
             throw new NullPointerException("longURI");
         }
         URI shrunk =  makeShortening(longURI);
-        URI existing = getURIStore().putIfAbsent(longURI, shrunk);
-        if ( existing != null ) {
+        final URI existing = getURIStore().putIfAbsent(longURI, shrunk);
+        if (existing != null) {
             shrunk = existing;
         }
         return shrunk;
     }
 
     public URI follow(URI shortURI) {
-        if ( shortURI == null ) {
+        if (shortURI == null) {
             throw new NullPointerException("shortURI");
         }
         return getURIStore().get(shortURI);
@@ -44,10 +44,10 @@ public abstract class AbstractURIManager extends AbstractLoadableEntity implemen
         try {
             return new URI(sourceURI.getScheme(),
                     getShorteningDomain(),
-                    "/"+getStringGenerator().getString(),
+                    "/" + getStringGenerator().getString(),
                     null);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("Failed to shorten URI: "+sourceURI, e);
+            throw new RuntimeException("Failed to shorten URI: " + sourceURI, e);
         }
     }
 
