@@ -23,8 +23,8 @@ public class CyclicRandomStringGenerator
     public CyclicRandomStringGenerator() {
         alphabet = config.getString("alphabet", DEFAULT_ALPHABET);
 
-        long seed = config.getLong("seed", DEFAULT_SEED);
-        int period = config.getInteger("period", DEFAULT_PERIOD);
+        final long seed = config.getLong("seed", DEFAULT_SEED);
+        final int period = config.getInteger("period", DEFAULT_PERIOD);
         idGenerator = new CyclicRandom(seed, period);
     }
 

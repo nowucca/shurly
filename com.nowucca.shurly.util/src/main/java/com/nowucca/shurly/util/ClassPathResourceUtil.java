@@ -8,17 +8,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Help for loading things from the classpath.
  */
 public final class ClassPathResourceUtil {
 
-    private static final Logger logger = Logger.getLogger("util");
-
-    private ClassPathResourceUtil() {}
+    private ClassPathResourceUtil() { }
 
     /**
      * Class properties come from the file <code>META-INF/config/full/package/name/{SimpleClassName}.properties</code>
@@ -53,16 +49,21 @@ public final class ClassPathResourceUtil {
         final Properties properties = new Properties();
         try {
             final URL resource = classLoader.getResource(resourceLocation);
-            in = new BufferedReader(new InputStreamReader(resource.openStream(), UTF8.charset()));
-            properties.load(in);
+            if (resource != null) {
+                in = new BufferedReader(new InputStreamReader(resource.openStream(), UTF8.charset()));
+                properties.load(in);
+            }
         } catch (Exception e) {
-            // logger.log(Level.INFO, String.format("Failed to load resource %s from classpath.", resourceLocation), e);
+            // logger.log(Level.INFO, String.format("Failed to load resource %s from classpath.",
+            //                                      resourceLocation), e);
         } finally {
-            if (in != null){
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    // logger.log(Level.INFO, String.format("Failed to close resource stream when loading resource %s from classpath.", resourceLocation), e);
+                    // logger.log(Level.INFO,
+                    // String.format("Failed to close resource stream when loading resource %s from classpath.",
+                    //               resourceLocation), e);
                 }
             }
         }

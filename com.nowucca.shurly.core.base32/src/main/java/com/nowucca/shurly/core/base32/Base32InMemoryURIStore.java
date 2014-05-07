@@ -22,12 +22,4 @@ public class Base32InMemoryURIStore extends AbstractInMemoryURIStore {
         return generator;
     }
 
-    //-----------------------------------
-    // test methods
-    //-----------------------------------
-
-
-    Base32StringGenerator getGenerator() {
-        return generator;
-    }
 }

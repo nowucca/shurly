@@ -24,7 +24,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import static java.lang.String.format;
 
@@ -35,13 +34,13 @@ public class ShurleyClient {
 
     private static final short VERSION = (short) 1;
 
-    private AttributeKey<Map<URI,URI>> CLIENT_CACHE =
+    private AttributeKey<Map<URI, URI>> CLIENT_CACHE =
             AttributeKey.valueOf("shurleyClientHandler.CLIENT_CACHE");
 
     private final String host;
     private final int port;
 
-    private static int msgId = 0;
+    private static int msgId;
 
     public ShurleyClient(String host, int port) {
         this.host = host;
@@ -53,30 +52,30 @@ public class ShurleyClient {
         printWelcomeMessage();
 
         // Configure the client.
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
-            Bootstrap bootstrap = new Bootstrap();
+            final Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(workerGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     .handler(shurelyClientInitializer);
 
             // Start the connection attempt.
-            ChannelFuture future = bootstrap.connect(host, port).sync();
+            final ChannelFuture future = bootstrap.connect(host, port).sync();
 
             printCommandHelpMessage();
 
             // Read commands from the stdin.
             ChannelFuture lastWriteFuture = null;
-            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-            for (; ; ) {
+            for (;;) {
                 if (lastWriteFuture != null) {
                     lastWriteFuture.syncUninterruptibly();
                 }
 
-                String line = in.readLine();
+                final String line = in.readLine();
                 if (line == null) {
                     continue;
                 }
@@ -111,7 +110,7 @@ public class ShurleyClient {
     private ChannelFuture processLine(String line, Channel channel) {
 
         if (line.startsWith("shrink ")) {
-            URI longURI = readUriFromLine(line, "shrink ");
+            final URI longURI = readUriFromLine(line, "shrink ");
             if (longURI == null) return null;
             final ShurleyShrinkMessage shrinkMsg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
             return channel.writeAndFlush(shrinkMsg)

@@ -8,42 +8,43 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-public class ResourceInjectionUtil {
+public final class ResourceInjectionUtil {
 
     private ResourceInjectionUtil() {
     }
 
+    @SuppressWarnings("unused")
     public static <T> void inject(Object target,
                                   Class<T> injectableType,
                                   T injectableInstance) {
-    	inject0(target, injectableType, injectableInstance);
+        inject0(target, injectableType, injectableInstance);
     }
 
     public static void injectAll(Object target, Map<Class<?>, Object> injectables) {
-   		for (Map.Entry<Class<?>, Object> entry : injectables.entrySet()) {
-   			Class<?> injectableType = entry.getKey();
-   			Object injectableInstance = entry.getValue();
-   			if(target != injectableInstance) {
+           for (Map.Entry<Class<?>, Object> entry : injectables.entrySet()) {
+               final Class<?> injectableType = entry.getKey();
+               final Object injectableInstance = entry.getValue();
+               if (target != injectableInstance) {
                    inject0(target, injectableType, injectableInstance);
                }
            }
-   	}
+       }
 
 
     private static void inject0(Object target,
             Class<?> injectableType,
             Object injectableInstance) {
 
-    	Class<? extends Object> targetClass = target.getClass();
-    	Method[] methods = targetClass.getMethods();
-    	for (Method method : methods) {
-            String methodName = method.getName();
-            Class<?>[] parameterTypes = method.getParameterTypes();
+        final Class<?> targetClass = target.getClass();
+        final Method[] methods = targetClass.getMethods();
+        for (Method method : methods) {
+            final String methodName = method.getName();
+            final Class<?>[] parameterTypes = method.getParameterTypes();
             if (methodName.startsWith("set") &&
                 methodName.length() > "set".length() &&
                 parameterTypes.length == 1) {
 
-                Resource annotation = method.getAnnotation(Resource.class);
+                final Resource annotation = method.getAnnotation(Resource.class);
                 if (annotation != null) {
                     Class<?> resourceType = annotation.type();
                     if (resourceType == Object.class) {
@@ -53,7 +54,7 @@ public class ResourceInjectionUtil {
                         try {
                             method.invoke(target, injectableInstance);
                         } catch (IllegalArgumentException e) {
-                            throw e;
+                            throw new RuntimeException(e);
                         } catch (IllegalAccessException e) {
                             throw new RuntimeException(e);
                         } catch (InvocationTargetException e) {
