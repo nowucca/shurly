@@ -6,6 +6,10 @@ package com.nowucca.shurly.core;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * Captures the abstract behavior of the main methods {@link #shrink(java.net.URI)} and {@link #follow(java.net.URI)},
+ * abstracting the notions of the {@link URIStore} and {@link StringGenerator} used.
+ */
 public abstract class AbstractURIManager extends AbstractLoadableEntity implements URIManager {
 
     public static final String DEFAULT_DOMAIN = "shure.ly";

@@ -3,6 +3,9 @@
  */
 package com.nowucca.shurly.core;
 
+/**
+ * An integer driven string generator with an abstract notion of a fixed alphabet with which to generate short URIs.
+ */
 public abstract class AbstractIntegerDrivenStringGenerator
         extends AbstractLoadableEntity implements IntegerDrivenStringGenerator {
 

@@ -6,6 +6,11 @@ package com.nowucca.shurly.core;
 import java.net.URI;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A URI Store with an in-memory representation for the association between long and short URIs.
+ *
+ * The {@link StringGenerator} is abstracted so this in memory class can be used with any integer driven generator.
+ */
 public abstract class AbstractInMemoryURIStore extends AbstractLoadableEntity implements URIStore {
 
     private ConcurrentHashMap<Integer, Record> database;
