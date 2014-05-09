@@ -1,18 +1,16 @@
 /**
  * Copyright (c) 2012-2014 Steven Atkinson.  All rights reserved
  */
-package com.nowucca.shurley.server;
+package com.nowucca.shurly.server;
 
-import com.nowucca.shurley.Utils;
+import com.nowucca.shurly.Utils;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import static io.netty.buffer.Unpooled.directBuffer;
@@ -112,5 +110,5 @@ public class ShurleyMessageDecoderTest {
     }
 
 
-    
+
 }

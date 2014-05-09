@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
-package com.nowucca.shurley.server;
+package com.nowucca.shurly.server;
 
 public abstract class ShurleyMessage {
     public static enum Kind { SHRINK(1), SHRUNK(2), ERROR(3), FOLLOW(4);

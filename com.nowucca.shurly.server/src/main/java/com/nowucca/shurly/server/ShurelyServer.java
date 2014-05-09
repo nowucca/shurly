@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
-package com.nowucca.shurley.server;
+package com.nowucca.shurly.server;
 
 import com.nowucca.shurly.core.URIManager;
 import com.nowucca.shurly.core.context.URIManagerContext;
@@ -93,7 +93,7 @@ public class ShurelyServer {
                             " <port> <uri-manager-class>");
             System.err.println(
                     "  e.g. " + ShurelyServer.class.getSimpleName() +
-                            " 8080 com.nowucca.shurley.core.basic.BasicURIManager");
+                            " 8080 com.nowucca.shurly.core.basic.BasicURIManager");
             return;
         }
 

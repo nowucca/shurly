@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2014, Steven Atkinson. All rights reserved.
  */
-package com.nowucca.shurley.server;
+package com.nowucca.shurly.server;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -178,7 +178,7 @@ public class ShurleyClient {
     }
 
     private static void printPrompt() {
-        System.out.print("shurley> ");
+        System.out.print("shurly> ");
     }
 
     private void printWelcomeMessage() {

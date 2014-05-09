@@ -41,7 +41,7 @@ public class CyclicRandomURIManagerTest {
         CyclicRandomURIManager manager = (CyclicRandomURIManager) context.getURIManager(CyclicRandomURIManager.class.getCanonicalName());
 
         final URI longURI = URI.create("http://www.google.com");
-        final URI expectedShortURI = URI.create("http://nowucca.com/shurley/cyclicrandom/dRUPyN");
+        final URI expectedShortURI = URI.create("http://nowucca.com/shurly/cyclicrandom/dRUPyN");
         URI shortURI = manager.shrink(longURI);
         Assert.assertEquals("failed to shrink to expected short uri", expectedShortURI, shortURI);
     }
