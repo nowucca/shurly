@@ -37,7 +37,7 @@ public class ShurleyMessageEncoderTest {
     public void shouldEncodeValidShrinkMessage() throws Exception {
         final String uriString = "http://example.com/shortenmeplease";
         final URI uri = URI.create(uriString);
-        ShurleyShrinkMessage shrinkMsg = new ShurleyShrinkMessage((short) 0x01, 1L, uri);
+        ShurlyShrinkMessage shrinkMsg = new ShurlyShrinkMessage((short) 0x01, 1L, uri);
         channel.writeOutbound(shrinkMsg);
 
         ByteBuf buffer = (ByteBuf) channel.readOutbound();
@@ -64,7 +64,7 @@ public class ShurleyMessageEncoderTest {
 
         final String shortUriString = "http://shure.ly/aabb";
         final URI shortURI = URI.create(shortUriString);
-        ShurleyShrunkMessage msg = new ShurleyShrunkMessage((short) 0x01, 1L, uri, shortURI);
+        ShurlyShrunkMessage msg = new ShurlyShrunkMessage((short) 0x01, 1L, uri, shortURI);
         channel.writeOutbound(msg);
 
         ByteBuf buffer = (ByteBuf) channel.readOutbound();
@@ -92,7 +92,7 @@ public class ShurleyMessageEncoderTest {
 
         final String shortUriString = "http://shure.ly/aabb";
         final URI shortURI = URI.create(shortUriString);
-        ShurleyFollowMessage msg = new ShurleyFollowMessage((short) 0x01, 1L, shortURI);
+        ShurlyFollowMessage msg = new ShurlyFollowMessage((short) 0x01, 1L, shortURI);
         channel.writeOutbound(msg);
 
         ByteBuf buffer = (ByteBuf) channel.readOutbound();
@@ -119,7 +119,7 @@ public class ShurleyMessageEncoderTest {
 
         final String reason = "Sample error";
         final long errorCodeIn = 1L;
-        ShurleyErrorMessage msg = new ShurleyErrorMessage((short) 1, 1L, errorCodeIn, reason);
+        ShurlyErrorMessage msg = new ShurlyErrorMessage((short) 1, 1L, errorCodeIn, reason);
         channel.writeOutbound(msg);
 
         ByteBuf buffer = (ByteBuf) channel.readOutbound();

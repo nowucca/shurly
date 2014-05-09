@@ -66,7 +66,7 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
                     case 0x01: {
                         final int longURILen = buf.readInt();
                         final String longURI = buf.readBytes(longURILen).toString(CHARSET);
-                        result = new ShurleyShrinkMessage(version, id, URI.create(longURI));
+                        result = new ShurlyShrinkMessage(version, id, URI.create(longURI));
                         break;
                     }
                     case 0x02: {
@@ -74,20 +74,20 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
                         final String longURI = buf.readBytes(longURILen).toString(CHARSET);
                         final int shortURILen = buf.readInt();
                         final String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
-                        result = new ShurleyShrunkMessage(version, id, URI.create(longURI), URI.create(shortURI));
+                        result = new ShurlyShrunkMessage(version, id, URI.create(longURI), URI.create(shortURI));
                         break;
                     }
                     case 0x03: {
                         final long errorCode = buf.readUnsignedInt();
                         final int reasonLength = buf.readInt();
                         final String reason = buf.readBytes(reasonLength).toString(CHARSET);
-                        result = new ShurleyErrorMessage(version, id, errorCode, reason);
+                        result = new ShurlyErrorMessage(version, id, errorCode, reason);
                         break;
                     }
                     case 0x04: {
                         final int shortURILen = buf.readInt();
                         final String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
-                        result = new ShurleyFollowMessage(version, id, URI.create(shortURI));
+                        result = new ShurlyFollowMessage(version, id, URI.create(shortURI));
                         break;
                     }
                     default:

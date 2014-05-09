@@ -3,7 +3,7 @@
  */
 package com.nowucca.shurly.server;
 
-public abstract class ShurleyMessage {
+public abstract class ShurlyMessage {
     public static enum Kind { SHRINK(1), SHRUNK(2), ERROR(3), FOLLOW(4);
 
         private int value;
@@ -22,7 +22,7 @@ public abstract class ShurleyMessage {
     private short version;
     private long msgId;
 
-    public ShurleyMessage(short version, long msgId) {
+    public ShurlyMessage(short version, long msgId) {
         this.version = version;
         this.msgId = msgId;
     }

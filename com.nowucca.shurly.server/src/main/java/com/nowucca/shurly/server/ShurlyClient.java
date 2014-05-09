@@ -30,7 +30,7 @@ import static java.lang.String.format;
 /**
  * Simplistic telnet-style Shurley client.
  */
-public class ShurleyClient {
+public class ShurlyClient {
 
     private static final short VERSION = (short) 1;
 
@@ -42,7 +42,7 @@ public class ShurleyClient {
 
     private static int msgId;
 
-    public ShurleyClient(String host, int port) {
+    public ShurlyClient(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -114,7 +114,7 @@ public class ShurleyClient {
             if (longURI == null) {
                 return null;
             }
-            final ShurleyShrinkMessage shrinkMsg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
+            final ShurlyShrinkMessage shrinkMsg = new ShurlyShrinkMessage(VERSION, msgId++, longURI);
             return channel.writeAndFlush(shrinkMsg)
                     .addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
@@ -132,7 +132,7 @@ public class ShurleyClient {
             if (longURI == null) {
                 return null;
             }
-            final ShurleyFollowMessage followMsg = new ShurleyFollowMessage(VERSION, msgId++, longURI);
+            final ShurlyFollowMessage followMsg = new ShurlyFollowMessage(VERSION, msgId++, longURI);
             return channel.writeAndFlush(followMsg)
             .addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
@@ -201,7 +201,7 @@ public class ShurleyClient {
 
         if (args.length != 2) {
             System.err.println(
-                    "Usage: " + ShurleyClient.class.getSimpleName() +
+                    "Usage: " + ShurlyClient.class.getSimpleName() +
                     " <host> <port>");
             return;
         }
@@ -209,14 +209,14 @@ public class ShurleyClient {
         final String host = args[0];
         final int port = Integer.parseInt(args[1]);
 
-        new ShurleyClient(host, port).run();
+        new ShurlyClient(host, port).run();
     }
 
     /**
      * Handles a client-side channel.
      */
-    private final SimpleChannelInboundHandler<ShurleyMessage> shurleyClientHandler =
-            new SimpleChannelInboundHandler<ShurleyMessage>() {
+    private final SimpleChannelInboundHandler<ShurlyMessage> shurleyClientHandler =
+            new SimpleChannelInboundHandler<ShurlyMessage>() {
 
 
         @Override
@@ -226,10 +226,10 @@ public class ShurleyClient {
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, final ShurleyMessage msg) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, final ShurlyMessage msg) throws Exception {
             // Print out the line received from the server.
-            if (msg instanceof ShurleyShrunkMessage) {
-                final ShurleyShrunkMessage m = (ShurleyShrunkMessage) msg;
+            if (msg instanceof ShurlyShrunkMessage) {
+                final ShurlyShrunkMessage m = (ShurlyShrunkMessage) msg;
                 final URI longURI = m.getLongURI();
                 final URI shortURI = m.getShortURI();
                 System.out.format("Received %s.v%d (%d) shortURI=\"%s\" longURI=\"%s\".\n",

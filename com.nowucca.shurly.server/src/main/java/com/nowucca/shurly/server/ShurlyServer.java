@@ -28,7 +28,7 @@ import static java.lang.String.format;
 /**
  * Simplistic url shortening server.
  */
-public class ShurelyServer {
+public class ShurlyServer {
 
     private static final Logger logger = Logger.getLogger("server");
 
@@ -37,7 +37,7 @@ public class ShurelyServer {
     private URIManagerContext uriManagerContext;
 
 
-    public ShurelyServer(int port, final String uriManagerName) {
+    public ShurlyServer(int port, final String uriManagerName) {
         this.port = port;
         this.uriManagerName = uriManagerName;
     }
@@ -89,22 +89,22 @@ public class ShurelyServer {
     public static void main(String[] args) throws Exception {
         if (args.length != 2) {
             System.err.println(
-                    "Usage: " + ShurelyServer.class.getSimpleName() +
+                    "Usage: " + ShurlyServer.class.getSimpleName() +
                             " <port> <uri-manager-class>");
             System.err.println(
-                    "  e.g. " + ShurelyServer.class.getSimpleName() +
+                    "  e.g. " + ShurlyServer.class.getSimpleName() +
                             " 8080 com.nowucca.shurly.core.basic.BasicURIManager");
             return;
         }
 
-        new ShurelyServer(Integer.parseInt(args[0]), args[1]).run();
+        new ShurlyServer(Integer.parseInt(args[0]), args[1]).run();
     }
 
     /**
      * Handles a server-side channel.
      */
-   private final SharableSimpleChannelInboundHandler<ShurleyMessage> shurleyServerHandler
-            = new SharableSimpleChannelInboundHandler<ShurleyMessage>() {
+   private final SharableSimpleChannelInboundHandler<ShurlyMessage> shurleyServerHandler
+            = new SharableSimpleChannelInboundHandler<ShurlyMessage>() {
 
         @Override
         public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -117,7 +117,7 @@ public class ShurelyServer {
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, ShurleyMessage msg) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, ShurlyMessage msg) throws Exception {
 
             switch (msg.getKind()) {
                 case SHRINK: {
@@ -138,9 +138,9 @@ public class ShurelyServer {
 
         }
 
-        private void handleFollowRequest(final ChannelHandlerContext ctx, final ShurleyMessage request) {
+        private void handleFollowRequest(final ChannelHandlerContext ctx, final ShurlyMessage request) {
             try {
-                final ShurleyFollowMessage followMsg = (ShurleyFollowMessage) request;
+                final ShurlyFollowMessage followMsg = (ShurlyFollowMessage) request;
 
                 logger.info(format("Received %s.v%d (%d) %s",
                         followMsg.getKind().name(),
@@ -150,7 +150,7 @@ public class ShurelyServer {
 
                 final URI shortURI = followMsg.getShortURI();
                 final URIManager selectedURIManager = uriManagerContext.getSelectedURIManager();
-                final ShurleyShrunkMessage response = new ShurleyShrunkMessage(
+                final ShurlyShrunkMessage response = new ShurlyShrunkMessage(
                         request.getVersion(), request.getMsgId(), selectedURIManager.follow(shortURI), shortURI);
                 ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
@@ -171,9 +171,9 @@ public class ShurelyServer {
             }
         }
 
-        private void handleShrinkRequest(final ChannelHandlerContext ctx, final ShurleyMessage request) {
+        private void handleShrinkRequest(final ChannelHandlerContext ctx, final ShurlyMessage request) {
             try {
-                final ShurleyShrinkMessage shrinkMsg = (ShurleyShrinkMessage) request;
+                final ShurlyShrinkMessage shrinkMsg = (ShurlyShrinkMessage) request;
 
                 logger.info(format("Received %s.v%d (%d) %s",
                         shrinkMsg.getKind().name(),
@@ -183,7 +183,7 @@ public class ShurelyServer {
 
                 final URI longURI = shrinkMsg.getLongURI();
                 final URIManager selectedURIManager = uriManagerContext.getSelectedURIManager();
-                final ShurleyShrunkMessage response = new ShurleyShrunkMessage(
+                final ShurlyShrunkMessage response = new ShurlyShrunkMessage(
                         request.getVersion(), request.getMsgId(), longURI, selectedURIManager.shrink(longURI));
                 ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                     public void operationComplete(ChannelFuture future) throws Exception {
@@ -205,10 +205,10 @@ public class ShurelyServer {
         }
 
         private void handleErrorResponseCondition(ChannelHandlerContext ctx,
-                                                  ShurleyMessage request,
+                                                  ShurlyMessage request,
                                                   final Throwable ex) {
-            final ShurleyErrorMessage response = new ShurleyErrorMessage(
-                    request.getVersion(), request.getMsgId(), ShurleyErrorCode.UNKNOWN_ERROR);
+            final ShurlyErrorMessage response = new ShurlyErrorMessage(
+                    request.getVersion(), request.getMsgId(), ShurlyErrorCode.UNKNOWN_ERROR);
             ctx.channel().writeAndFlush(response).addListener(new ChannelFutureListener() {
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (!future.isSuccess()) {

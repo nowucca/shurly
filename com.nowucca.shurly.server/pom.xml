@@ -35,7 +35,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.nowucca.shurly.server.ShurelyServer</mainClass>
+              <mainClass>com.nowucca.shurly.server.ShurlyServer</mainClass>
               <arguments>
                 <argument>${port}</argument>
                 <argument>${uriManager}</argument>
@@ -62,7 +62,7 @@
               </execution>
             </executions>
             <configuration>
-              <mainClass>com.nowucca.shurly.server.ShurleyClient</mainClass>
+              <mainClass>com.nowucca.shurly.server.ShurlyClient</mainClass>
               <arguments>
                 <argument>${host}</argument>
                 <argument>${port}</argument>

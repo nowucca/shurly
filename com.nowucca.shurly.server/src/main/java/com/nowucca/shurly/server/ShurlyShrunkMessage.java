@@ -5,16 +5,17 @@ package com.nowucca.shurly.server;
 
 import java.net.URI;
 
-public class ShurleyFollowMessage extends ShurleyMessage {
+public class ShurlyShrunkMessage extends ShurlyShrinkMessage {
+
     @Override
     public Kind getKind() {
-        return Kind.FOLLOW;
+        return Kind.SHRUNK;
     }
 
     private URI shortURI;
 
-    public ShurleyFollowMessage(short version, long msgId, URI shortURI) {
-        super(version, msgId);
+    public ShurlyShrunkMessage(short version, long msgId, URI longURI, URI shortURI) {
+        super(version, msgId, longURI);
         this.shortURI = shortURI;
     }
 

@@ -3,7 +3,7 @@
  */
 package com.nowucca.shurly.server;
 
-public class ShurleyErrorMessage extends ShurleyMessage {
+public class ShurlyErrorMessage extends ShurlyMessage {
     @Override
     public Kind getKind() {
         return Kind.ERROR;
@@ -12,13 +12,13 @@ public class ShurleyErrorMessage extends ShurleyMessage {
     private long errorCode;
     private String reason;
 
-    public ShurleyErrorMessage(short version, long msgId, long errorCode, String reason) {
+    public ShurlyErrorMessage(short version, long msgId, long errorCode, String reason) {
             super(version, msgId);
             this.errorCode = errorCode;
             this.reason = reason;
         }
 
-    public ShurleyErrorMessage(short version, long msgId, ShurleyErrorCode code) {
+    public ShurlyErrorMessage(short version, long msgId, ShurlyErrorCode code) {
         super(version, msgId);
         this.errorCode = code.getCode();
         this.reason = code.getReason();

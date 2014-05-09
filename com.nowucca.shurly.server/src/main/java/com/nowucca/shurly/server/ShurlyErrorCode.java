@@ -3,14 +3,14 @@
  */
 package com.nowucca.shurly.server;
 
-public enum ShurleyErrorCode {
+public enum ShurlyErrorCode {
 
     UNKNOWN_ERROR(1L, "An unknown error has occurred.");
 
     private long code;
     private String reason;
 
-    private ShurleyErrorCode(long code, String reason) {
+    private ShurlyErrorCode(long code, String reason) {
         this.code = code;
         this.reason = reason;
     }

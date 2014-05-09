@@ -5,7 +5,7 @@ package com.nowucca.shurly.server;
 
 import java.net.URI;
 
-public class ShurleyShrinkMessage extends ShurleyMessage {
+public class ShurlyShrinkMessage extends ShurlyMessage {
     @Override
     public Kind getKind() {
         return Kind.SHRINK;
@@ -13,7 +13,7 @@ public class ShurleyShrinkMessage extends ShurleyMessage {
 
     private URI longURI;
 
-    public ShurleyShrinkMessage(short version, long msgId, URI longURI) {
+    public ShurlyShrinkMessage(short version, long msgId, URI longURI) {
         super(version, msgId);
         this.longURI = longURI;
     }

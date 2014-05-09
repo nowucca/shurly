@@ -15,8 +15,6 @@ import java.nio.charset.Charset;
 
 import static io.netty.buffer.Unpooled.directBuffer;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public class ShurleyMessageDecoderTest {
 
@@ -48,9 +46,9 @@ public class ShurleyMessageDecoderTest {
         buf.writeBytes(longURI);            // url
         channel.writeInbound(buf);
 
-        ShurleyMessage message = (ShurleyMessage) channel.readInbound();
-        assertEquals(ShurleyMessage.Kind.SHRINK, message.getKind());
-        ShurleyShrinkMessage shrinkMessage = (ShurleyShrinkMessage) message;
+        ShurlyMessage message = (ShurlyMessage) channel.readInbound();
+        assertEquals(ShurlyMessage.Kind.SHRINK, message.getKind());
+        ShurlyShrinkMessage shrinkMessage = (ShurlyShrinkMessage) message;
         assertEquals(1, message.getMsgId());
         assertEquals(1, message.getVersion());
         assertEquals(URI.create(uriString), shrinkMessage.getLongURI());
@@ -74,9 +72,9 @@ public class ShurleyMessageDecoderTest {
         buf.writeBytes(uris[1]);            // url
         channel.writeInbound(buf);
 
-        ShurleyMessage message = (ShurleyMessage) channel.readInbound();
-        assertEquals(ShurleyMessage.Kind.SHRUNK, message.getKind());
-        ShurleyShrunkMessage shrinkMessage = (ShurleyShrunkMessage) message;
+        ShurlyMessage message = (ShurlyMessage) channel.readInbound();
+        assertEquals(ShurlyMessage.Kind.SHRUNK, message.getKind());
+        ShurlyShrunkMessage shrinkMessage = (ShurlyShrunkMessage) message;
         assertEquals(2, message.getMsgId());
         assertEquals(1, message.getVersion());
         assertEquals(URI.create(longUriString), shrinkMessage.getLongURI());
@@ -99,9 +97,9 @@ public class ShurleyMessageDecoderTest {
         buf.writeBytes(data[0]);            // reason
         channel.writeInbound(buf);
 
-        ShurleyMessage message = (ShurleyMessage) channel.readInbound();
-        assertEquals(ShurleyMessage.Kind.ERROR, message.getKind());
-        ShurleyErrorMessage msg = (ShurleyErrorMessage) message;
+        ShurlyMessage message = (ShurlyMessage) channel.readInbound();
+        assertEquals(ShurlyMessage.Kind.ERROR, message.getKind());
+        ShurlyErrorMessage msg = (ShurlyErrorMessage) message;
         assertEquals(2, message.getMsgId());
         assertEquals(1, message.getVersion());
         assertEquals(4514, msg.getErrorCode());

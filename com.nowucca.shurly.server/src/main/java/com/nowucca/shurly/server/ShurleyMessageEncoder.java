@@ -13,12 +13,12 @@ import java.nio.charset.Charset;
 import static io.netty.buffer.Unpooled.buffer;
 import static io.netty.buffer.Unpooled.wrappedBuffer;
 
-public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> {
+public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurlyMessage> {
     static final Charset CHARSET = Charset.forName("UTF-8");
     static final int MAGIC_BYTES_AS_INT = 0x5355524C;
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, ShurleyMessage msg, ByteBuf out) throws Exception {
+    protected void encode(ChannelHandlerContext ctx, ShurlyMessage msg, ByteBuf out) throws Exception {
 
         if (msg != null) {
 
@@ -28,7 +28,7 @@ public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> 
 
             switch (msg.getKind()) {
                 case SHRINK: {
-                    final ShurleyShrinkMessage shrinkMessage = (ShurleyShrinkMessage) msg;
+                    final ShurlyShrinkMessage shrinkMessage = (ShurlyShrinkMessage) msg;
                     final URI longURI = shrinkMessage.getLongURI();
                     final byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
                     final ByteBuf header = buffer(4 + 1 + 1 + 4);
@@ -44,7 +44,7 @@ public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> 
                 }
 
                 case SHRUNK: {
-                    final ShurleyShrunkMessage shrunkMessage = (ShurleyShrunkMessage) msg;
+                    final ShurlyShrunkMessage shrunkMessage = (ShurlyShrunkMessage) msg;
                     final URI longURI = shrunkMessage.getLongURI();
                     final URI shortURI = shrunkMessage.getShortURI();
                     final byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
@@ -64,7 +64,7 @@ public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> 
                 }
 
                 case ERROR: {
-                    final ShurleyErrorMessage errorMessage = (ShurleyErrorMessage) msg;
+                    final ShurlyErrorMessage errorMessage = (ShurlyErrorMessage) msg;
                     final long errorCode = errorMessage.getErrorCode();
                     final byte[] reason = errorMessage.getReason().getBytes(CHARSET);
                     final ByteBuf header = buffer(4 + 1 + 1 + 4);
@@ -81,7 +81,7 @@ public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> 
                 }
 
                 case FOLLOW: {
-                    final ShurleyFollowMessage followMessage = (ShurleyFollowMessage) msg;
+                    final ShurlyFollowMessage followMessage = (ShurlyFollowMessage) msg;
                     final URI shortURI = followMessage.getShortURI();
                     final byte[] encodedShortURI = shortURI.toString().getBytes(CHARSET);
                     final ByteBuf header = buffer(4 + 1 + 1 + 4);
