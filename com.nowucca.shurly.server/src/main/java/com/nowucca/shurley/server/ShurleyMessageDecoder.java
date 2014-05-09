@@ -24,8 +24,8 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
         READ_COMMAND_DATA
     }
 
-    short version = 0;
-    short command = 0x00;
+    short version;
+    short command;
     int magic;
     long id;
 
@@ -64,29 +64,29 @@ public class ShurleyMessageDecoder extends ReplayingDecoder<ShurleyMessageDecode
             case READ_COMMAND_DATA:
                 switch (command) {
                     case 0x01: {
-                        int longURILen = buf.readInt();
-                        String longURI = buf.readBytes(longURILen).toString(CHARSET);
+                        final int longURILen = buf.readInt();
+                        final String longURI = buf.readBytes(longURILen).toString(CHARSET);
                         result = new ShurleyShrinkMessage(version, id, URI.create(longURI));
                         break;
                     }
                     case 0x02: {
-                        int longURILen = buf.readInt();
-                        String longURI = buf.readBytes(longURILen).toString(CHARSET);
-                        int shortURILen = buf.readInt();
-                        String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
+                        final int longURILen = buf.readInt();
+                        final String longURI = buf.readBytes(longURILen).toString(CHARSET);
+                        final int shortURILen = buf.readInt();
+                        final String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
                         result = new ShurleyShrunkMessage(version, id, URI.create(longURI), URI.create(shortURI));
                         break;
                     }
                     case 0x03: {
-                        long errorCode = buf.readUnsignedInt();
-                        int reasonLength = buf.readInt();
-                        String reason = buf.readBytes(reasonLength).toString(CHARSET);
+                        final long errorCode = buf.readUnsignedInt();
+                        final int reasonLength = buf.readInt();
+                        final String reason = buf.readBytes(reasonLength).toString(CHARSET);
                         result = new ShurleyErrorMessage(version, id, errorCode, reason);
                         break;
                     }
                     case 0x04: {
-                        int shortURILen = buf.readInt();
-                        String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
+                        final int shortURILen = buf.readInt();
+                        final String shortURI = buf.readBytes(shortURILen).toString(CHARSET);
                         result = new ShurleyFollowMessage(version, id, URI.create(shortURI));
                         break;
                     }

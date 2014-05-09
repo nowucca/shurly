@@ -111,7 +111,9 @@ public class ShurleyClient {
 
         if (line.startsWith("shrink ")) {
             final URI longURI = readUriFromLine(line, "shrink ");
-            if (longURI == null) return null;
+            if (longURI == null) {
+                return null;
+            }
             final ShurleyShrinkMessage shrinkMsg = new ShurleyShrinkMessage(VERSION, msgId++, longURI);
             return channel.writeAndFlush(shrinkMsg)
                     .addListener(new ChannelFutureListener() {
@@ -126,8 +128,10 @@ public class ShurleyClient {
                 }
             });
         } else if (line.startsWith("follow ")) {
-            URI longURI = readUriFromLine(line, "follow ");
-            if (longURI == null) return null;
+            final URI longURI = readUriFromLine(line, "follow ");
+            if (longURI == null) {
+                return null;
+            }
             final ShurleyFollowMessage followMsg = new ShurleyFollowMessage(VERSION, msgId++, longURI);
             return channel.writeAndFlush(followMsg)
             .addListener(new ChannelFutureListener() {
@@ -202,8 +206,8 @@ public class ShurleyClient {
             return;
         }
 
-        String host = args[0];
-        int port = Integer.parseInt(args[1]);
+        final String host = args[0];
+        final int port = Integer.parseInt(args[1]);
 
         new ShurleyClient(host, port).run();
     }
@@ -211,7 +215,8 @@ public class ShurleyClient {
     /**
      * Handles a client-side channel.
      */
-    private final SimpleChannelInboundHandler<ShurleyMessage> shurleyClientHandler = new SimpleChannelInboundHandler<ShurleyMessage>() {
+    private final SimpleChannelInboundHandler<ShurleyMessage> shurleyClientHandler =
+            new SimpleChannelInboundHandler<ShurleyMessage>() {
 
 
         @Override
@@ -221,12 +226,12 @@ public class ShurleyClient {
         }
 
         @Override
-        protected void channelRead0(ChannelHandlerContext ctx, ShurleyMessage msg) throws Exception {
+        protected void channelRead0(ChannelHandlerContext ctx, final ShurleyMessage msg) throws Exception {
             // Print out the line received from the server.
-            if ( msg instanceof ShurleyShrunkMessage ) {
-                ShurleyShrunkMessage m = (ShurleyShrunkMessage) msg;
-                URI longURI = m.getLongURI();
-                URI shortURI = m.getShortURI();
+            if (msg instanceof ShurleyShrunkMessage) {
+                final ShurleyShrunkMessage m = (ShurleyShrunkMessage) msg;
+                final URI longURI = m.getLongURI();
+                final URI shortURI = m.getShortURI();
                 System.out.format("Received %s.v%d (%d) shortURI=\"%s\" longURI=\"%s\".\n",
                         msg.getKind(), msg.getVersion(), msg.getMsgId(), shortURI, longURI);
                 ctx.channel().attr(CLIENT_CACHE).get().put(longURI, shortURI);
@@ -251,7 +256,7 @@ public class ShurleyClient {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
             // Create a default pipeline implementation.
-            ChannelPipeline pipeline = ch.pipeline();
+            final ChannelPipeline pipeline = ch.pipeline();
 
             // Add the codec
             pipeline.addLast("decoder", new ShurleyMessageDecoder());

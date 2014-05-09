@@ -23,83 +23,81 @@ public class ShurleyMessageEncoder extends MessageToByteEncoder<ShurleyMessage> 
         if (msg != null) {
 
 
-            short version = msg.getVersion();
-            long msgId = msg.getMsgId();
+            final short version = msg.getVersion();
+            final long msgId = msg.getMsgId();
 
-            switch ( msg.getKind() ) {
+            switch (msg.getKind()) {
                 case SHRINK: {
-                    ShurleyShrinkMessage shrinkMessage = (ShurleyShrinkMessage) msg;
-                    URI longURI = shrinkMessage.getLongURI();
-                    byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
-                    ByteBuf header = buffer(4 + 1 + 1 + 4);
+                    final ShurleyShrinkMessage shrinkMessage = (ShurleyShrinkMessage) msg;
+                    final URI longURI = shrinkMessage.getLongURI();
+                    final byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
+                    final ByteBuf header = buffer(4 + 1 + 1 + 4);
                     header.writeInt(MAGIC_BYTES_AS_INT);
                     header.writeByte(version);
                     header.writeByte(shrinkMessage.getKind().getValue());
-                    header.writeInt((int)msgId);
-                    ByteBuf body = buffer(4 + encodedLongURI.length);
+                    header.writeInt((int) msgId);
+                    final ByteBuf body = buffer(4 + encodedLongURI.length);
                     body.writeInt(encodedLongURI.length);
                     body.writeBytes(encodedLongURI);
                     out.writeBytes(wrappedBuffer(header, body));
+                    break;
                 }
-                break;
-                
+
                 case SHRUNK: {
-                    ShurleyShrunkMessage shrunkMessage = (ShurleyShrunkMessage) msg;
-                    URI longURI = shrunkMessage.getLongURI();
-                    URI shortURI = shrunkMessage.getShortURI();
-                    byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
-                    byte[] encodedShortURI = shortURI.toString().getBytes(CHARSET);
-                    ByteBuf header = buffer(4 + 1 + 1 + 4);
+                    final ShurleyShrunkMessage shrunkMessage = (ShurleyShrunkMessage) msg;
+                    final URI longURI = shrunkMessage.getLongURI();
+                    final URI shortURI = shrunkMessage.getShortURI();
+                    final byte[] encodedLongURI = longURI.toString().getBytes(CHARSET);
+                    final byte[] encodedShortURI = shortURI.toString().getBytes(CHARSET);
+                    final ByteBuf header = buffer(4 + 1 + 1 + 4);
                     header.writeInt(MAGIC_BYTES_AS_INT);
                     header.writeByte(version);
                     header.writeByte(shrunkMessage.getKind().getValue());
-                    header.writeInt((int)msgId);
-                    ByteBuf body = buffer(4 + encodedLongURI.length + 4 + encodedShortURI.length);
+                    header.writeInt((int) msgId);
+                    final ByteBuf body = buffer(4 + encodedLongURI.length + 4 + encodedShortURI.length);
                     body.writeInt(encodedLongURI.length);
                     body.writeBytes(encodedLongURI);
                     body.writeInt(encodedShortURI.length);
                     body.writeBytes(encodedShortURI);
                     out.writeBytes(wrappedBuffer(header, body));
+                    break;
                 }
-                break;
 
                 case ERROR: {
-                    ShurleyErrorMessage errorMessage = (ShurleyErrorMessage) msg;
-                    long errorCode = errorMessage.getErrorCode();
-                    byte[] reason = errorMessage.getReason().getBytes(CHARSET);
-                    ByteBuf header = buffer(4 + 1 + 1 + 4);
+                    final ShurleyErrorMessage errorMessage = (ShurleyErrorMessage) msg;
+                    final long errorCode = errorMessage.getErrorCode();
+                    final byte[] reason = errorMessage.getReason().getBytes(CHARSET);
+                    final ByteBuf header = buffer(4 + 1 + 1 + 4);
                     header.writeInt(MAGIC_BYTES_AS_INT);
                     header.writeByte(version);
                     header.writeByte(errorMessage.getKind().getValue());
-                    header.writeInt((int)msgId);
-                    ByteBuf body = buffer(4 + 4 + reason.length);
-                    body.writeInt((int)errorCode);
+                    header.writeInt((int) msgId);
+                    final ByteBuf body = buffer(4 + 4 + reason.length);
+                    body.writeInt((int) errorCode);
                     body.writeInt(reason.length);
                     body.writeBytes(reason);
                     out.writeBytes(wrappedBuffer(header, body));
+                    break;
                 }
-                break;
 
                 case FOLLOW: {
-                    ShurleyFollowMessage followMessage = (ShurleyFollowMessage) msg;
-                    URI shortURI = followMessage.getShortURI();
-                    byte[] encodedShortURI = shortURI.toString().getBytes(CHARSET);
-                    ByteBuf header = buffer(4 + 1 + 1 + 4);
+                    final ShurleyFollowMessage followMessage = (ShurleyFollowMessage) msg;
+                    final URI shortURI = followMessage.getShortURI();
+                    final byte[] encodedShortURI = shortURI.toString().getBytes(CHARSET);
+                    final ByteBuf header = buffer(4 + 1 + 1 + 4);
                     header.writeInt(MAGIC_BYTES_AS_INT);
                     header.writeByte(version);
                     header.writeByte(followMessage.getKind().getValue());
-                    header.writeInt((int)msgId);
-                    ByteBuf body = buffer(4 + encodedShortURI.length);
+                    header.writeInt((int) msgId);
+                    final ByteBuf body = buffer(4 + encodedShortURI.length);
                     body.writeInt(encodedShortURI.length);
                     body.writeBytes(encodedShortURI);
                     out.writeBytes(wrappedBuffer(header, body));
+                    break;
                 }
-                break;
 
                 default:
                     throw new IllegalArgumentException("Unrecognized message kind: " + msg.getKind());
-
-
             }
         }
     }
