@@ -30,27 +30,6 @@ public abstract class AbstractURIManager extends AbstractLoadableEntity implemen
             throw new NullPointerException("longURI");
         }
 
-
-        URI shortURI = getURIStore().getShortURI(longURI);
-        if (shortURI == null) {
-            do {
-                shortURI = makeShortening(longURI);
-                URI existingShortURI = getURIStore().putIfAbsent(shortURI, longURI);
-            } while (getURIStore().)
-        }
-        return shortURI;
-
-        URI shortURI;
-        URI existing = ;
-        AtomicReference<URI> e = new AtomicReference<URI>(getURIStore().hasShortURI(longURI));
-        while (e.compareAndSet(null, makeShortening(longURI))) {
-            existing = getURIStore().putIfAbsent(e.get(),  longURI);
-            if (existing != null) {
-                e.set(existing);
-            }
-        }
-
-
         URI shrunk =  makeShortening(longURI);
         final URI existing = getURIStore().putIfAbsent(longURI, shrunk);
         if (existing != null) {
