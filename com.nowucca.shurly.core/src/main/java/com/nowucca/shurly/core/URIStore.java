@@ -17,6 +17,21 @@ import java.net.URI;
 public interface URIStore extends NamedObject {
 
     /**
+     * Return true iff the long URI has an associated shortURI in this store
+     * @param longURI the long URI that may or may not be present in the store
+     * @return true iff the longURI has an associated shortURI in this store
+     */
+    boolean containsKey(URI longURI);
+
+    /**
+     * Obtain the short URI for the provided long URI within this store, or <code>null</code> if none can be found.
+     * @param longURI the long URI for which we desire the shortURI
+     * @return the short URI for the provided long URI within this store, or <code>null</code> if none can be found.
+     */
+    URI get(URI longURI);
+
+
+    /**
      * <p>Stores and associated a long URI with a short URI.</p>
      *
      * <p>If the specified longURI is not already associated with a shortURI,
@@ -38,5 +53,6 @@ public interface URIStore extends NamedObject {
      * @return the corresponding long URI, or <code>null</code> if
      *         no such long URI can be found.
      */
-    URI get(URI shortURI);
+    URI retrieve(URI shortURI);
+
 }

@@ -30,6 +30,20 @@ public abstract class AbstractURIManager extends AbstractLoadableEntity implemen
             throw new NullPointerException("longURI");
         }
 
+        final URIStore store = getURIStore();
+        URI shrunk;
+        if (store.containsKey(longURI)) {
+            shrunk = store.get(longURI);
+            if (shrunk == null) {
+                createAndStore(longURI);
+            }
+        } else {
+            shrunk = createAndStore(longURI);
+        }
+        return shrunk;
+    }
+
+    private URI createAndStore(URI longURI) {
         URI shrunk =  makeShortening(longURI);
         final URI existing = getURIStore().putIfAbsent(longURI, shrunk);
         if (existing != null) {
@@ -42,7 +56,7 @@ public abstract class AbstractURIManager extends AbstractLoadableEntity implemen
         if (shortURI == null) {
             throw new NullPointerException("shortURI");
         }
-        return getURIStore().get(shortURI);
+        return getURIStore().retrieve(shortURI);
     }
 
     protected URI makeShortening(URI sourceURI) {

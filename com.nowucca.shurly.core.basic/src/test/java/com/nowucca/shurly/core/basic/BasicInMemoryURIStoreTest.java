@@ -25,7 +25,7 @@ public class BasicInMemoryURIStoreTest {
         final URI shortURI = URI.create("http://shure.ly/aa");
         URI existing = map.putIfAbsent(longURI, shortURI);
         Assert.assertNull(existing);
-        Assert.assertSame(longURI, map.get(shortURI));
+        Assert.assertSame(longURI, map.retrieve(shortURI));
     }
 
     @Test

@@ -24,6 +24,16 @@ public class BasicInMemoryURIStore extends AbstractLoadableEntity implements URI
         return this.getClass().getCanonicalName();
     }
 
+    @Override
+    public boolean containsKey(URI longURI) {
+        return long2short.containsKey(longURI);
+    }
+
+    @Override
+    public URI get(URI longURI) {
+        return long2short.get(longURI);
+    }
+
     public synchronized URI putIfAbsent(URI longURI, URI shortURI) {
         URI existing = long2short.putIfAbsent(longURI, shortURI);
         if (existing != null) {
@@ -39,7 +49,7 @@ public class BasicInMemoryURIStore extends AbstractLoadableEntity implements URI
         return null;
     }
 
-    public synchronized URI get(URI shortURI) {
+    public synchronized URI retrieve(URI shortURI) {
         return short2long.get(shortURI);
     }
 }
