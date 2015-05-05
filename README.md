@@ -15,24 +15,11 @@ You can clone the repository wherever you want.
     
 Building this project
 ---------------------
-Each module is currently built using maven.  Provided below is a shell script that builds the product currently.
 
-(Note: requires Apache Maven 3.2.1+ for the right behavior with exit status codes in the shell.)
+`mvn clean verify` will build the project
 
-    #!/bin/bash
-    cd com.nowucca.shurly.util
-    mvn clean install || exit 1
-    cd ../com.nowucca.shurly.core
-    mvn clean install || exit 1
-    cd ../com.nowucca.shurly.core.basic
-    mvn clean install || exit 1
-    cd ../com.nowucca.shurly.core.base32
-    mvn clean install || exit 1
-    cd ../com.nowucca.shurly.core.cyclicrandom
-    mvn clean install || exit 1
-    cd ../com.nowucca.shurly.server
-    mvn clean install || exit 1
-    
+[![Build Status](https://travis-ci.org/nowucca/shurly.svg?branch=master)](https://travis-ci.org/nowucca/shurly)
+
 Running the Example Client and Server
 -------------------------------------
 
