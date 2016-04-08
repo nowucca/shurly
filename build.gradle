@@ -1,15 +1,32 @@
-
 allprojects {
-   apply plugin: "java"
-   repositories {
-      mavenCentral()
-      mavenLocal()
-   }
+
 }
 
 subprojects {
+    apply plugin: "java"
+
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    test {
+        testLogging {
+            events "passed", "failed", "skipped"
+            exceptionFormat = 'full'
+        }
+    }
+
+    javadoc {
+        title = '<h1>Shurly</h1>'
+
+        options.bottom = '<i>Copyright &#169; 2014 - 2016 Steven Atkinson. All Rights Reserved.</i>'
+        options.addStringOption('XDignore.symbol.file', '-quiet')
+    }
 }
 
 task wrapper(type: Wrapper) {
-   gradleVersion = '2.12'
+    gradleVersion = '2.12'
 }
