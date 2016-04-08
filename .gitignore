@@ -19,6 +19,9 @@ hs_err_pid*
 *.ipr
 *.iws
 
+#BUILD FOLDERS
+build
+
 build.sh
 
 clean.sh

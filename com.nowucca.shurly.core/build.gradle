@@ -1,0 +1,7 @@
+archivesBaseName = "com.nowucca.shurly.core"
+version = 'develop-SNAPSHOT'
+
+dependencies {
+    compile project(':com.nowucca.shurly.util')
+    testCompile group: 'junit', name: 'junit', version: '4.7'
+}

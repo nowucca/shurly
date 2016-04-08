@@ -1,1 +1,8 @@
 rootProject.name = 'shurly'
+
+include ":com.nowucca.shurly.util"
+include ":com.nowucca.shurly.core.base32"
+include ":com.nowucca.shurly.core.basic"
+include ":com.nowucca.shurly.core.cyclicrandom"
+include ":com.nowucca.shurly.core"
+include ":com.nowucca.shurly.server"
